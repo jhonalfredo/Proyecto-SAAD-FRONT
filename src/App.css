@@ -1,0 +1,57 @@
+/*.App {
+    background-color: rgb(212, 212, 212);
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}*/
+
+/*.contMenu{
+    background-color: blueviolet;
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+}*/
+
+/*estilo menu compuesto*/
+.letraUser {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background-color: darkgray;
+    color: black;
+    margin-left: 5px;
+    /**/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/*estilos inicias sesion*/
+.contenedorInicio {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.mainContIni{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(33, 37, 41);
+}
+
+.contenedorheaderiniciar{
+    display: flex;
+    justify-content: center;
+    align-items: center;  
+}
+
+.contbotonini{
+    display: flex;
+    justify-content: center;
+    align-items: center;  
+}
