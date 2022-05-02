@@ -1,53 +1,80 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MenuSimple from './MenuSimple'
 import logo from './../logo.svg';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Alert } from 'bootstrap';
 const rutainicio = "http://127.0.0.1:8000/api/acceso";
 //const rutainicio = "http://localhost:8000/api/acceso/"
 const ruta = "http://127.0.0.1:8000/api/users";
 export default function IniciarSesion(props) {
 
     const [usuario, setUsuario] = useState(0);
-    const [constrasena, setContrasena] = useState("");
+    const [contrasena, setContrasena] = useState("");
+    const [errorCod, setErrorCod] = useState("");
+    const [errorCont, setErrorCont] = useState("");
+
     const navigate = useNavigate();
+
+    const cerrarSesion = () => {
+        //console.log("cerrar sesion");
+        axios.post('/api/cerrarsesion').then(res => {
+            if (res.data.res === true) {
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('auth_name');
+                localStorage.removeItem("datosUser");
+                //navegate("/");
+            }
+        }).catch(error => {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('auth_name');
+            localStorage.removeItem("datosUser");
+        })
+
+    }
+
+    useEffect(()=>{
+        cerrarSesion();
+    }, []);
 
     const hacerAccion = (e) => {
         e.preventDefault()
 
-        const data = { Correo_U: usuario, Contrasenia_U: constrasena }
-        axios.get('sanctum/csrf-cookie').then(response => {
-            axios.post('api/acceso', data).then(res => {
-                if (res.data.res === true) {
-                    localStorage.setItem('auth_token', res.data.token);
-                    localStorage.setItem('auth_name', res.data.correo);
-                    console.log("se logeo correctamente");
-                    console.log(res.data);
-                    //navigate("/administrador/solicitudes");
-                }
-                else {
-                    console.log("No se logeo correctamente");
-                }
-            }).catch(error=>{
-                console.log("usuario inexistente");
+        setErrorCod("");
+        setErrorCont("");
+
+        if (/*String(usuario).length === 9 &&*/ contrasena.length > 0) {
+            const data = { Correo_U: usuario, Contrasenia_U: contrasena }
+            axios.get('sanctum/csrf-cookie').then(response => {
+                axios.post('api/acceso', data).then(res => {
+                    if (res.data.res === true) {
+                        localStorage.setItem('auth_token', res.data.token);
+                        localStorage.setItem('auth_name', res.data.correo);
+                        console.log("se logeo correctamente");
+                        console.log(res.data);
+                        localStorage.setItem("datosUser", JSON.stringify(res.data));
+                        if(res.data.rol===2||res.data.rol===3){
+                            navigate("administrador/solicitudes");
+                        }else if(res.data.rol===1){
+                            navigate("docente/mis-reservas")
+                        }
+                        //navigate("/administrador/solicitudes");
+                    } else {
+                        alert("Usuario o Contraseña incorrectos");
+                    }
+                }).catch(error => {
+                    alert("Usuario o Contraseña incorrectos");
+                });
             });
-        });
-        //hacerOtraAccion(data);
-
-    }
-
-    //forma2
-    /*
-    const hacerOtraAccion= async(data)=>{
-        try{
-            var response = await axios.get('sanctum/csrf-cookie');
-            var res = await axios.post('api/acceso', data);
-            console.log(res.data);
-        }catch(error){
-            console.log("usuario inexistente");
+        } else {
+            if (String(usuario).length !== 9) {
+                //setErrorCod("Código SIS inválido");
+            }
+            if (contrasena.length < 1) {
+                setErrorCont("Campo Obligatorio");
+            }
         }
-    }*/
-
+    }
 
     return (
         <div className="mainContIni">
@@ -60,10 +87,12 @@ export default function IniciarSesion(props) {
                     <div className="mb-3">
                         <label htmlFor="exampleInputEmail1" className="form-label">Código Sis</label>
                         <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" onChange={(e) => setUsuario(e.target.value)} />
+                        <p id='errorUsuario' className='textoErrorCampo'>{errorCod}</p>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="exampleInputPassword1" className="form-label">Constraseña</label>
                         <input type="password" className="form-control" id="exampleInputPassword1" onChange={(e) => setContrasena(e.target.value)} />
+                        <p id='errorContrasena' className='textoErrorCampo'>{errorCont}</p>
                     </div>
                     <div className="contbotonini">
                         <button type="submit" className="btn btn-primary">Iniciar Sesión</button>

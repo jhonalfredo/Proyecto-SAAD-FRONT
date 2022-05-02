@@ -1,25 +1,56 @@
 import React from 'react'
-import { Link, NavLink } from 'react-router-dom';
+import { Link, Navigate, NavLink, useNavigate } from 'react-router-dom';
 import logo from './../../logo.svg';
 import axios from 'axios';
-import { useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
+import 'bootstrap/js/src/dropdown';
+//window.history.forward(1);
+
 
 export default function MenuAdmin() {
 
-    const [datosUser, setDatosUser] = useState({nombre: "Jhon Alfredo", apellido: "Morales Estrada"}); 
 
-    useEffect(() => {
-        pedirUsuarios();
-    }, []);
+    /*const [datosUser, setDatosUser] = useState({
+        apellido_materno: "",
+        apellido_paterno: "",
+        codigosis: 0,
+        correo: "",
+        nombre: "",
+        res: false,
+        rol: -1,
+        token: ""
+    });*/
+
+    const [datosUser, setDatosUser] = useState(null);
+    const navigate = useNavigate();
     
-    const pedirUsuarios = async () => {
-        try {
-            const usuariosget = await axios.get('/api/users');
-            //setUsuarios(usuariosget);
-            console.log(usuariosget);
-        } catch (error) {
-            console.log("usuario no autenticado");
+    useEffect(() => {
+        const datosRecup = localStorage.getItem("datosUser");
+        console.log(datosRecup);
+        if (datosRecup) {
+            let nuevoDato = JSON.parse(datosRecup);
+            if(nuevoDato.rol!==2&&nuevoDato.rol!==3){
+                alert("Usted no es administrador");
+                cerrarSesion();
+            }else{
+                setDatosUser(nuevoDato);
+            }
+        } else {
+            //console.log("Usuario no autenticado");
+            alert("Usuario no autenticado");
+            navigate("/");
         }
+        //pedirUsuarios();
+    }, []);
+
+    function getRolUsuario(){
+        let res = "------";
+        if(datosUser){
+            if(datosUser.rol===2||datosUser.rol===3){
+                res = "Administrador";
+            }
+        }
+        return res
     }
 
     const cerrarSesion = () => {
@@ -28,23 +59,29 @@ export default function MenuAdmin() {
             if (res.data.res === true) {
                 localStorage.removeItem('auth_token');
                 localStorage.removeItem('auth_name');
-                //navegate("/");
+                localStorage.removeItem("datosUser");
+                navigate("/");
             }
-        });
+        }).catch(error => {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('auth_name');
+            localStorage.removeItem("datosUser");
+        })
+
     }
 
-    function concatenarNombre(){
+    function concatenarNombre() {
         let res = "Cargando...";
-        if(datosUser){
-            res = datosUser.nombre+" "+datosUser.apellido;
+        if (datosUser) {
+            res = datosUser.nombre + " " + datosUser.apellido_paterno+" "+datosUser.apellido_materno;
         }
         return res;
     }
 
-    function concatenarIniciales(){
+    function concatenarIniciales() {
         let res = "-"
-        if(datosUser){
-            res = datosUser.nombre.charAt(0)+datosUser.apellido.charAt(0);
+        if (datosUser) {
+            res = datosUser.nombre.charAt(0) + datosUser.apellido_paterno.charAt(0);
         }
         return res;
     }
@@ -88,8 +125,8 @@ export default function MenuAdmin() {
 
                                     </div>
                                     <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDarkDropdownMenuLink">
-                                        <li><a className="dropdown-item" href="#">Docente</a></li>
-                                        <li><a className="dropdown-item" href="#">201902507</a></li>
+                                        <li><a className="dropdown-item" href="#">{getRolUsuario()}</a></li>
+                                        <li><a className="dropdown-item" href="#">{datosUser===null? "...":datosUser.codigosis}</a></li>
                                         <li><a className="dropdown-item" href="#" onClick={() => cerrarSesion()}>Cerrar Sesión</a></li>
                                     </ul>
                                 </li>

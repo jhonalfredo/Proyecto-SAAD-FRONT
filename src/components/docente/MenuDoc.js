@@ -1,37 +1,84 @@
 import React, { useEffect } from 'react'
-import { NavLink } from 'react-router-dom';
+import { Navigate, NavLink, useNavigate } from 'react-router-dom';
 import logo from './../../logo.svg';
 import axios from 'axios';
+import { useState } from 'react';
+import 'bootstrap/js/src/dropdown';
 
 export default function MenuDoc() {
 
-    useEffect(()=>{
-       pedirUsuarios(); 
+    const [datosUser, setDatosUser] = useState(null);
+    const navigate = useNavigate();
+
+    
+    useEffect(() => {
+        const datosRecup = localStorage.getItem("datosUser");
+        console.log(datosRecup);
+        if (datosRecup) {
+            let nuevoDato = JSON.parse(datosRecup);
+            if(nuevoDato.rol!==1){
+                alert("Usted no es administrador");
+                cerrarSesion();
+            }else{
+                setDatosUser(nuevoDato);
+            }
+        } else {
+            //console.log("Usuario no autenticado");
+            alert("Usuario no autenticado");
+            navigate("/");
+        }
+        //pedirUsuarios();
     }, []);
 
-    const pedirUsuarios = async () => {
-        const usuariosget  = await axios.get('/api/users');
-        //setUsuarios(usuariosget);
-        console.log(usuariosget);
-      }
-
-    const cerrarSesion = ()=>{
+    const cerrarSesion = () => {
         console.log("cerrar sesion");
-        axios.post('/api/cerrarsesion').then(res=>{
-            if(res.data.res === true){
+        axios.post('/api/cerrarsesion').then(res => {
+            if (res.data.res === true) {
                 localStorage.removeItem('auth_token');
                 localStorage.removeItem('auth_name');
-                //navegate("/");
+                localStorage.removeItem("datosUser");
+                navigate("/");
             }
-        });
+        }).catch(error => {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('auth_name');
+            localStorage.removeItem("datosUser");
+        })
+
     }
-    
+
+    function concatenarNombre() {
+        let res = "Cargando...";
+        if (datosUser) {
+            res = datosUser.nombre.toUpperCase() + " " + datosUser.apellido_paterno.toUpperCase()+" "+datosUser.apellido_materno.toUpperCase();
+        }
+        return res;
+    }
+
+    function concatenarIniciales() {
+        let res = "-"
+        if (datosUser) {
+            res = datosUser.nombre.toUpperCase().charAt(0) + datosUser.apellido_paterno.toUpperCase().charAt(0);
+        }
+        return res;
+    }
+
+    function getRolUsuario(){
+        let res = "------";
+        if(datosUser){
+            if(datosUser.rol===1){
+                res = "Docente";
+            }
+        }
+        return res
+    }
+
     return (
         <div className='contMenu'>
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div className="container-fluid">
                     <div>
-                    <NavLink to="/docente" className="navbar-brand" href="#">
+                        <NavLink to="/docente" className="navbar-brand" href="#">
                             <img src={logo} alt="" width="50" height="35" className="d-inline-block align-text-top" />
                             Saad
                         </NavLink>
@@ -50,11 +97,11 @@ export default function MenuDoc() {
                             </li>
                         </ul>
                         <span className="navbar-text">
-                            Leticia Blanco Coca
+                        {concatenarNombre()}
                         </span>
                         <div>
                             <div className="letraUser">
-                                LB
+                            {concatenarIniciales()}
                             </div>
                         </div>
                         <div id="navbarNavDarkDropdown">
@@ -64,9 +111,9 @@ export default function MenuDoc() {
 
                                     </div>
                                     <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDarkDropdownMenuLink">
-                                        <li><a className="dropdown-item" href="#">Docente</a></li>
-                                        <li><a className="dropdown-item" href="#">201902507</a></li>
-                                        <li><a className="dropdown-item" href="#" onClick={()=> cerrarSesion()}>Cerrar Sesión</a></li>
+                                        <li><a className="dropdown-item" href="#">{getRolUsuario()}</a></li>
+                                        <li><a className="dropdown-item" href="#">{datosUser===null? "...":datosUser.codigosis}</a></li>
+                                        <li><a className="dropdown-item" href="#" onClick={() => cerrarSesion()}>Cerrar Sesión</a></li>
                                     </ul>
                                 </li>
                             </ul>

@@ -10,6 +10,15 @@ export default function AdmDocentes() {
     <div>
       <MenuAdmin />
       <h1>Docentes</h1>
+      
+      <div className="row px-3">
+        <h4 className='col'>Lista Docentes</h4>
+        <div className="col" style={{display: 'flex', justifyContent: "flex-end"}}>
+          <button className='btn btn-danger'>Registrar Nuevo</button>
+        </div>
+        
+      </div>
+
       <table className="table">
         <thead>
           <tr>
@@ -28,9 +37,9 @@ export default function AdmDocentes() {
             <tr key={indice} value={e}>
               <th scope="row">{indice + 1}</th>
               <td>{e.nombre}</td>
-              <td>{e.nombre+"ap"}</td>
+              <td>{e.nombre + "ap"}</td>
               <td>{e.codigo}</td>
-              <td><Link to={{pathname: e.codigo, state: [{dato: e}]}} className="btn btn-warning">EditMatDoc</Link></td>
+              <td><Link to={e.codigo} className="btn btn-warning">Opciones</Link></td>
             </tr>
           )}
         </tbody>
