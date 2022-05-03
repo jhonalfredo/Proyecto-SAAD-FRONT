@@ -24,8 +24,8 @@ export default function MenuDoc() {
             }
         } else {
             //console.log("Usuario no autenticado");
-            //alert("Usuario no autenticado");
-            //navigate("/");
+            alert("Usuario no autenticado");
+            navigate("/");
         }
         //pedirUsuarios();
     }, []);

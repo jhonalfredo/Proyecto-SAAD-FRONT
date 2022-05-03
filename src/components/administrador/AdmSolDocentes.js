@@ -17,7 +17,7 @@ export default function AdmSolDocentes() {
     recuperarSolicitades();
   }, []);
   const recuperarSolicitades = async () => {
-    const rutainicio = "http://127.0.0.1:8000/api/listarTodas";
+    const rutainicio = "/api/listarTodas";
     let v = await axios.get(rutainicio);
     setDatos(v.data);
     console.log(v.data);
@@ -57,7 +57,7 @@ export default function AdmSolDocentes() {
               <td>{e.Nombre_U}</td>
               <td>{e.Fecha_SR}</td>
               <td>"15:00 pm"</td>
-              <td><Link to={e.idreserva} className="btn btn-warning">EditMatDoc</Link></td>
+              <td></td>
             </tr>
           )}
         </tbody>

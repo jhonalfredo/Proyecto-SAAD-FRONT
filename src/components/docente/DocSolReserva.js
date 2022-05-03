@@ -14,24 +14,38 @@ export default function DocSolReserva() {
     const [horarioR, setHorarioR] = useState("6:45");
     const [perR, setPerR] = useState(1);
 
-    const ruta = "http://127.0.0.1:8000/api/materias/201801450";
-    const rutaMatGrupo = "http://127.0.0.1:8000/api/grupos/201801450/";
+    //const ruta = "http://127.0.0.1:8000/api/materias/201801450";
+    //const rutaMatGrupo = "http://127.0.0.1:8000/api/grupos/201801450/";
+
+    const [datosUser, setDatosUser] = useState(null);
+    const [codMateriaActual, setCodigoMateriaActual] = useState();
+    const [misGruposSel, setMisGruposSel] = useState([]);
 
     useEffect(() => {
-        console.log("se ejecuta efect")
-        recuperarMateriaDoc();
+        console.log("se ejecuta efect");
+        const datosRecup = localStorage.getItem("datosUser");
+        console.log(datosRecup);
+        if (datosRecup) {
+            let nuevoDato = JSON.parse(datosRecup);
+            //console.log(nuevoDato);
+            setDatosUser(nuevoDato);
+            recuperarMateriaDoc(nuevoDato.codigosis);
+        }
     }, []);
 
-    const recuperarMateriaDoc = async () => {
-        let v = await axios.get(ruta);
+    const recuperarMateriaDoc = async (codigosis) => {
+        let v = await axios.get("/api/materias/"+codigosis);
         setListMateria(v.data);
         console.log(v.data);
     }
 
     const recuperarGrupoMateria = async (id) => {
-        let rutanueva = rutaMatGrupo + id;
+        setCodigoMateriaActual(id);
+        console.log("matidsisiss", codMateriaActual);
+        let rutanueva = "/api/grupos/"+datosUser.codigosis+"/"+ id;
         let grupos = await axios.get(rutanueva);
         setListaME(grupos.data);
+        setMisGruposSel([]);
         console.log(grupos.data);
     }
 
@@ -101,13 +115,26 @@ export default function DocSolReserva() {
     const registrarSolicitudReserva = async(valor) =>{
         const ruta = "http://127.0.0.1:8000/api/reservaCompartida";
         await axios.post(ruta, valor);
-    } 
+    }
+    
+    const listarGruposMateria = (grupo, agregar)=>{
+        console.log("agregarmat", grupo, agregar);
+        if(agregar){
+            let listaNueva = [...misGruposSel, grupo];
+            console.log(listaNueva);
+            setMisGruposSel(listaNueva);
+        }else{
+            let listaNueva = listaME.filter(dato => dato !== grupo);
+            console.log(listaNueva);
+            setMisGruposSel(listaNueva);
+        }
+    }
 
     return (
         <div>
             <MenuDoc />
             <h1>Solicitar</h1>
-            <form onSubmit={(e) => hacerAccion(e)}>
+            <form onSubmit={(e) => hacerAccion(e)} className="p-3">
 
                 <div className="row">
                     <div className="col">
@@ -123,12 +150,12 @@ export default function DocSolReserva() {
 
                     <div className="col">
                         <div className="materiasAdd"> Grupos...
-                            <div className='card'>
+                            <div className='card px-1' style={{minHeight: "50px"}}>
                                 {listaME.map((e, indice) =>
-                                    <div key={e.Grupo_UM}>
-                                        <div class="form-check">
-                                            <input className="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked />
-                                            <label className="form-check-label" htmlFor="flexCheckChecked">
+                                    <div key={codMateriaActual+"-"+e.Grupo_UM}>
+                                        <div className="form-check">
+                                            <input className="form-check-input" onChange={(objeto)=>listarGruposMateria(e, objeto.target.checked)} type="checkbox" id={codMateriaActual+"-"+e.Grupo_UM}/>
+                                            <label className="form-check-label" htmlFor={codMateriaActual+"-"+e.Grupo_UM}>
                                                 {e.Grupo_UM}
                                             </label>
                                         </div>
