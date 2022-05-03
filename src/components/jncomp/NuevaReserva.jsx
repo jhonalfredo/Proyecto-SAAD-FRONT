@@ -4,6 +4,7 @@ import Image from "react-bootstrap/Image";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
+import MenuDoc from "../docente/MenuDoc";
 
 const HORARIOS = ["6:45", "7:00"];
 
@@ -44,7 +45,7 @@ function NuevaReserva() {
 
   function agregarOQuitarGrupo(event) {
     if (idsGruposSeleccionados.includes(event.target.value)) {
-      const idsGruposFiltrados = idsGruposSeleccionados.filter(function(x) {
+      const idsGruposFiltrados = idsGruposSeleccionados.filter(function (x) {
         return x != event.target.value;
       })
       setIdsGruposSeleccionados(idsGruposFiltrados);
@@ -69,58 +70,62 @@ function NuevaReserva() {
   };
 
   return (
-    <Container>
-      <Row>
-        <Form>
-          <Form.Select onChange={guardarIDMateria}>
-            <option value={"-1"}>Materia</option>
-            {materias.map((materia) => (
-              <option key={materia.id} value={materia.id}>
-                {materia.nombre}
-              </option>
-            ))}
-          </Form.Select>
-          <Form.Select
-            onChange={(event) => setHorarioSeleccionado(event.target.value)}
-          >
-            <option value={"-1"}>Selecciona tu horario</option>
-            {HORARIOS.map((horario) => (
-              <option key={horario} value={horario}>
-                {horario}
-              </option>
-            ))}
-          </Form.Select>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Nro estudiantes</Form.Label>
-            <Form.Control
-              value={nroEstudiantes}
-              onChange={guardarNroEstudiantes}
-              className="mi-input"
-              type="email"
-            />
-          </Form.Group>
-          <label>Seleccionar fecha</label>
-          <input
-            value={fecha}
-            onChange={(event) => setFecha(event.target.value)}
-            type="date"
-          ></input>
-          <Form.Group className="mb-3">
-            <Form.Label>Example textarea</Form.Label>
-            <Form.Control
-              value={motivo}
-              onChange={(event) => setMotivo(event.target.value)}
-              as="textarea"
-              rows={3}
-            />
-          </Form.Group>
-          {grupos.map(function (grupo) {
-            return <Form.Check key={grupo.id} value={grupo.id} onChange={agregarOQuitarGrupo} label={grupo.grupo} />;
-          })}
-        </Form>
-        <Button onClick={mandarDatos}>guardar</Button>
-      </Row>
-    </Container>
+    <div>
+      <MenuDoc />
+      <Container>
+
+        <Row>
+          <Form>
+            <Form.Select onChange={guardarIDMateria}>
+              <option value={"-1"}>Materia</option>
+              {materias.map((materia) => (
+                <option key={materia.id} value={materia.id}>
+                  {materia.nombre}
+                </option>
+              ))}
+            </Form.Select>
+            <Form.Select
+              onChange={(event) => setHorarioSeleccionado(event.target.value)}
+            >
+              <option value={"-1"}>Selecciona tu horario</option>
+              {HORARIOS.map((horario) => (
+                <option key={horario} value={horario}>
+                  {horario}
+                </option>
+              ))}
+            </Form.Select>
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Label>Nro estudiantes</Form.Label>
+              <Form.Control
+                value={nroEstudiantes}
+                onChange={guardarNroEstudiantes}
+                className="mi-input"
+                type="email"
+              />
+            </Form.Group>
+            <label>Seleccionar fecha</label>
+            <input
+              value={fecha}
+              onChange={(event) => setFecha(event.target.value)}
+              type="date"
+            ></input>
+            <Form.Group className="mb-3">
+              <Form.Label>Example textarea</Form.Label>
+              <Form.Control
+                value={motivo}
+                onChange={(event) => setMotivo(event.target.value)}
+                as="textarea"
+                rows={3}
+              />
+            </Form.Group>
+            {grupos.map(function (grupo) {
+              return <Form.Check key={grupo.id} value={grupo.id} onChange={agregarOQuitarGrupo} label={grupo.grupo} />;
+            })}
+          </Form>
+          <Button onClick={mandarDatos}>guardar</Button>
+        </Row>
+      </Container>
+    </div>
   );
 }
 

@@ -14,7 +14,7 @@ export default function AdmDocentes() {
       <div className="row px-3">
         <h4 className='col'>Lista Docentes</h4>
         <div className="col" style={{display: 'flex', justifyContent: "flex-end"}}>
-          <button className='btn btn-danger'>Registrar Nuevo</button>
+          <Link to="registrar" className='btn btn-danger'>Registrar Nuevo</Link>
         </div>
         
       </div>
