@@ -1,10 +1,25 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import MenuAdmin from './MenuAdmin'
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export default function AdmDocentes() {
 
-  const datos = [{ nombre: "jhon", codigo: "439422" }, { nombre: "juan", codigo: "535255" }]
+  //const datos = [{ nombre: "jhon", codigo: "439422" }, { nombre: "juan", codigo: "535255" }]
+
+  const [datos, setDatos] = useState([]);
+  useEffect(() => {
+    console.log("se ejecuta efect")
+    recuperarSolicitades();
+  }, []);
+
+  const recuperarSolicitades = async () => {
+    const rutainicio = "/api/listarDocente";
+    let v = await axios.get(rutainicio);
+    setDatos(v.data);
+    console.log(v.data);
+  }
 
   return (
     <div>
@@ -26,6 +41,7 @@ export default function AdmDocentes() {
             <th scope="col">Nombre</th>
             <th scope="col">Apellido</th>
             <th scope="col">Codigo</th>
+            <th scope='col'>Correo</th>
             <th scope="col">Opciones</th>
           </tr>
         </thead>
@@ -36,10 +52,11 @@ export default function AdmDocentes() {
           {datos.map((e, indice) =>
             <tr key={indice} value={e}>
               <th scope="row">{indice + 1}</th>
-              <td>{e.nombre}</td>
-              <td>{e.nombre + "ap"}</td>
-              <td>{e.codigo}</td>
-              <td><Link to={e.codigo} className="btn btn-warning">Opciones</Link></td>
+              <td>{e.Nombre_U}</td>
+              <td>{e.Apelllido_Paterno_U+" "+e.Apellido_Materno_U}</td>
+              <td>{e.Codigo_SIS_U}</td>
+              <td>{e.Correo_U}</td>
+              <td><Link to={String(e.Codigo_SIS_U)} className="btn btn-warning">Opciones</Link></td>
             </tr>
           )}
         </tbody>

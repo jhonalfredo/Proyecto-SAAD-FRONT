@@ -28,6 +28,7 @@
     justify-content: center;
     align-items: center;
 }
+
 /*estilos inicias sesion*/
 .contenedorInicio {
     display: block;
@@ -35,7 +36,7 @@
     margin-right: auto;
 }
 
-.mainContIni{
+.mainContIni {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -44,19 +45,43 @@
     background-color: rgb(33, 37, 41);
 }
 
-.contenedorheaderiniciar{
+.contenedorheaderiniciar {
     display: flex;
     justify-content: center;
-    align-items: center;  
+    align-items: center;
 }
 
-.contbotonini{
+.contbotonini {
     display: flex;
     justify-content: center;
-    align-items: center;  
+    align-items: center;
 }
 
 /*formularios*/
-.textoErrorCampo{
+.textoErrorCampo {
     color: red;
+}
+
+/*sol reserva*/
+.contenedortotaldatos {
+    display: inline-flex;
+    flex-direction: row;
+    padding: 15px;
+}
+
+.derecha {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: flex-start;
+    padding-left: 5px;
+}
+
+.nombreUser{
+    font-size: 17px;
+    font-style: bold;
+}
+
+.codSisUser{
+    font-size: 14px;
 }

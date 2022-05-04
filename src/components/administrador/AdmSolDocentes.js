@@ -35,6 +35,7 @@ export default function AdmSolDocentes() {
         <label className="btn btn-outline-primary" for="btnradio2">Pendientes</label>
 
       </div>
+      <div className="card m-5 p-3">
       <table className="table">
         <thead>
           <tr>
@@ -54,14 +55,15 @@ export default function AdmSolDocentes() {
             <tr key={indice} value={e}>
               <th scope="row">{indice + 1}</th>
               <td>{e.Nomb_M}</td>
-              <td>{e.Nombre_U}</td>
+              <td>{e.Nombre_U+" "+e.Apelllido_Paterno_U+" "+e.Apellido_Materno_U}</td>
               <td>{e.Fecha_SR}</td>
-              <td>"15:00 pm"</td>
-              <td></td>
+              <td>{e.Hora_Inicio_SR}</td>
+              <td><button className='btn btn-danger'>Ver</button></td>
             </tr>
           )}
         </tbody>
       </table>
+      </div>
     </div>
   )
 }

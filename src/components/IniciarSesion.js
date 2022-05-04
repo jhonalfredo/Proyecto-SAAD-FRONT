@@ -85,7 +85,7 @@ export default function IniciarSesion(props) {
                         Saad
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="exampleInputEmail1" className="form-label">Código Sis</label>
+                        <label htmlFor="exampleInputEmail1" className="form-label">Correo</label>
                         <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" onChange={(e) => setUsuario(e.target.value)} />
                         <p id='errorUsuario' className='textoErrorCampo'>{errorCod}</p>
                     </div>
