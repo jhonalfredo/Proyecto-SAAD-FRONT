@@ -28,7 +28,7 @@ export default function DocSolReserva() {
     const [gruposAdjuntos, setGruposAdjuntos] = useState([]);
     const [misAdjuntosSel, setMisAdjuntosSel] = useState([]);
     //horario
-    var horariofin = "8:15";
+    var horariofin = "7:30";
 
 
     useEffect(() => {
@@ -89,7 +89,7 @@ export default function DocSolReserva() {
     }
 
     function unirPalabras(e) {
-        return e.Nume_G + "-" + e.Nomb_M;
+        return e.Grupo_UM + "-" + e.Nombre_M;
     }
 
     function enviarDatos() {
@@ -229,11 +229,11 @@ export default function DocSolReserva() {
         ///console.log("indice", horarios.indexOf(e));
         let indice = horarios.indexOf(e);
         //setHorarioR(e)
-        if(indice===9){
+        if(indice===(horarios.length-1)){
             setListaPeriodos([1]);
             setPerR(1);
             //generarHorario(horarioR, 1)
-        }else if(indice===8){
+        }else if(indice===(horarios.length-2)){
             setListaPeriodos([1,2]);
             if(Number(perR)===3){
                 setPerR(1);
@@ -287,7 +287,7 @@ export default function DocSolReserva() {
                             <select onChange={(e) => agregarME(e)} defaultValue={'DEFAULT'} className="form-select" aria-label="Default select example">
                                 <option value="DEFAULT" disabled>Selecciona la materia</option>
                                 {listMateria.map((e, indice) =>
-                                    <option key={indice} value={e.SisM_M}>{e.Nume_G} - {e.Nomb_M}</option>
+                                    <option key={indice} value={e.Codigo_M}>{e.Grupo_UM} - {e.Nombre_M}</option>
                                 )}
                             </select>
                         </div>
@@ -366,7 +366,7 @@ export default function DocSolReserva() {
                                                 <div className="form-check">
                                                     <input className="form-check-input" onChange={(objeto) => listarAdjuntosMateria(e, objeto.target.checked)} type="checkbox" id={codMateriaActual + "-" + e.Grupo_UM} />
                                                     <label className="form-check-label" htmlFor={codMateriaActual + "-" + e.Grupo_UM}>
-                                                        {e.Grupo_UM+" - "+e.Nombre_U+" "+e.Apelllido_Paterno_U+" "+e.Apellido_Materno_U+" - "+e.Codigo_SIS_U}
+                                                        {e.Grupo_UM+" - "+e.Nombre_U+" "+e.Apellido_Paterno_U+" "+e.Apellido_Materno_U+" - "+e.Codigo_SIS_U}
                                                     </label>
                                                 </div>
                                             </div>

@@ -13,13 +13,14 @@ export default function MenuDoc() {
     
     useEffect(() => {
         const datosRecup = localStorage.getItem("datosUser");
-        console.log(datosRecup);
+        console.log("datoos user", datosRecup);
         if (datosRecup) {
             let nuevoDato = JSON.parse(datosRecup);
             if(nuevoDato.rol!==1){
                 alert("Usted no es administrador");
                 cerrarSesion();
             }else{
+                console.log("datooos", nuevoDato);
                 setDatosUser(nuevoDato);
             }
         } else {

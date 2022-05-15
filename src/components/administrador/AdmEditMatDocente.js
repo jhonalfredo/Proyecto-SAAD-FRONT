@@ -40,7 +40,7 @@ export default function AdmEditMatDocente(props) {
   }
 
   const recuperarMateriasLibres = async () => {
-    const rutainicio = "/api/obtenerGruposLibres";
+    const rutainicio = "/api/gruposParaAsignar";
     let v = await axios.get(rutainicio);
     console.log("gruposlibres___________________________________",v.data);
     setGruposLibres(v.data);
@@ -51,7 +51,7 @@ export default function AdmEditMatDocente(props) {
   function concatenarIniciales() {
     let res = "-"
     if (datosUser) {
-      res = datosUser.Nombre_U.charAt(0) + datosUser.Apelllido_Paterno_U.charAt(0);
+      res = datosUser.Nombre_U.charAt(0) + datosUser.Apellido_Paterno_U.charAt(0);
     }
     return res;
   }
@@ -59,7 +59,7 @@ export default function AdmEditMatDocente(props) {
   function getNombreUser() {
     let res = "";
     if (datosUser) {
-      res = datosUser.Nombre_U + " " + datosUser.Apelllido_Paterno_U + " " + datosUser.Apellido_Materno_U;
+      res = datosUser.Nombre_U + " " + datosUser.Apellido_Paterno_U + " " + datosUser.Apellido_Materno_U;
     }
     return res;
   }
@@ -92,7 +92,7 @@ export default function AdmEditMatDocente(props) {
   const eliminarMateriasDocentes = async () => {
     //await axios.put("/api/desasignar/"+id+"/"+misGruposSel[0].SisM_M+"/"+misGruposSel[0].Grupo_UM, null);
     for (let i = 0; i < misGruposSel.length; i++) {
-      await axios.put("/api/desasignar/" + id + "/" + misGruposSel[i].SisM_M + "/" + misGruposSel[i].Grupo_UM, null);
+      await axios.put("/api/desasignar/" + id + "/" + misGruposSel[i].Codigo_M + "/" + misGruposSel[i].Grupo_UM, null);
     }
 
     //listarGruposMateria();
@@ -101,7 +101,7 @@ export default function AdmEditMatDocente(props) {
 
   const agregarMateriasDocentes = async() =>{
     for (let i = 0; i < misLibresSel.length; i++) {
-      await axios.put("/api/asignar/" + id + "/" + misLibresSel[i].SisM_M + "/" + misLibresSel[i].Grupo_UM, null);
+      await axios.put("/api/asignar/" + id + "/" + misLibresSel[i].Codigo_M + "/" + misLibresSel[i].Id_G, null);
     }
 
     //listarLibresMateria();
@@ -134,11 +134,11 @@ export default function AdmEditMatDocente(props) {
         <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
           {misGruposSel.length} materias seleccionadas
           {gruposLibres.map((e, indice) =>
-            <div key={e.SisM_M + "-" + e.Grupo_UM}>
+            <div key={e.Codigo_UM + "-" + e.Id_G}>
               <div className="form-check">
-                <input className="form-check-input" onChange={(objeto) => listarLibresMateria(e, objeto.target.checked)} type="checkbox" id={e.SisM_M + "-" + e.Grupo_UM} />
-                <label className="form-check-label" htmlFor={e.SisM_M + "-" + e.Grupo_UM}>
-                  {e.Grupo_UM + " - " + e.Nomb_M}
+                <input className="form-check-input" onChange={(objeto) => listarLibresMateria(e, objeto.target.checked)} type="checkbox" id={e.Codigo_UM + "-" + e.Id_G} />
+                <label className="form-check-label" htmlFor={e.Codigo_UM + "-" + e.Id_G}>
+                  {e.Id_G + " - " + e.Nombre_M}
                 </label>
               </div>
             </div>
@@ -148,11 +148,11 @@ export default function AdmEditMatDocente(props) {
         <div className="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
           {misGruposSel.length} materias seleccionadas
           {listaMD.map((e, indice) =>
-            <div key={e.SisM_M + "-" + e.Grupo_UM}>
+            <div key={e.Codigo_UM + "-" + e.Grupo_UM}>
               <div className="form-check">
-                <input className="form-check-input" onChange={(objeto) => listarGruposMateria(e, objeto.target.checked)} type="checkbox" id={e.SisM_M + "-" + e.Grupo_UM} />
-                <label className="form-check-label" htmlFor={e.SisM_M + "-" + e.Grupo_UM}>
-                  {e.Grupo_UM + " - " + e.Nomb_M}
+                <input className="form-check-input" onChange={(objeto) => listarGruposMateria(e, objeto.target.checked)} type="checkbox" id={e.Codigo_UM + "-" + e.Grupo_UM} />
+                <label className="form-check-label" htmlFor={e.Codigo_UM + "-" + e.Grupo_UM}>
+                  {e.Grupo_UM + " - " + e.Nombre_M}
                 </label>
               </div>
             </div>
