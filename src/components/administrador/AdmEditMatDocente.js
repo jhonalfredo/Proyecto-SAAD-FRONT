@@ -92,7 +92,7 @@ export default function AdmEditMatDocente(props) {
   const eliminarMateriasDocentes = async () => {
     //await axios.put("/api/desasignar/"+id+"/"+misGruposSel[0].SisM_M+"/"+misGruposSel[0].Grupo_UM, null);
     for (let i = 0; i < misGruposSel.length; i++) {
-      await axios.put("/api/desasignar/" + id + "/" + misGruposSel[i].Codigo_M + "/" + misGruposSel[i].Grupo_UM, null);
+      await axios.patch("/api/desasignar/" + id + "/" + misGruposSel[i].Codigo_M + "/" + misGruposSel[i].Grupo_UM, null);
     }
 
     //listarGruposMateria();
@@ -101,7 +101,7 @@ export default function AdmEditMatDocente(props) {
 
   const agregarMateriasDocentes = async() =>{
     for (let i = 0; i < misLibresSel.length; i++) {
-      await axios.put("/api/asignar/" + id + "/" + misLibresSel[i].Codigo_M + "/" + misLibresSel[i].Id_G, null);
+      await axios.patch("/api/asignar/" + id + "/" + misLibresSel[i].Codigo_M + "/" + misLibresSel[i].Id_G, null);
     }
 
     //listarLibresMateria();
@@ -134,10 +134,10 @@ export default function AdmEditMatDocente(props) {
         <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
           {misGruposSel.length} materias seleccionadas
           {gruposLibres.map((e, indice) =>
-            <div key={e.Codigo_UM + "-" + e.Id_G}>
+            <div key={e.Codigo_M + "-" + e.Id_G}>
               <div className="form-check">
-                <input className="form-check-input" onChange={(objeto) => listarLibresMateria(e, objeto.target.checked)} type="checkbox" id={e.Codigo_UM + "-" + e.Id_G} />
-                <label className="form-check-label" htmlFor={e.Codigo_UM + "-" + e.Id_G}>
+                <input className="form-check-input" onChange={(objeto) => listarLibresMateria(e, objeto.target.checked)} type="checkbox" id={e.Codigo_M + "-" + e.Id_G} />
+                <label className="form-check-label" htmlFor={e.Codigo_M + "-" + e.Id_G}>
                   {e.Id_G + " - " + e.Nombre_M}
                 </label>
               </div>
@@ -148,10 +148,10 @@ export default function AdmEditMatDocente(props) {
         <div className="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
           {misGruposSel.length} materias seleccionadas
           {listaMD.map((e, indice) =>
-            <div key={e.Codigo_UM + "-" + e.Grupo_UM}>
+            <div key={e.Codigo_M + "-" + e.Grupo_UM}>
               <div className="form-check">
-                <input className="form-check-input" onChange={(objeto) => listarGruposMateria(e, objeto.target.checked)} type="checkbox" id={e.Codigo_UM + "-" + e.Grupo_UM} />
-                <label className="form-check-label" htmlFor={e.Codigo_UM + "-" + e.Grupo_UM}>
+                <input className="form-check-input" onChange={(objeto) => listarGruposMateria(e, objeto.target.checked)} type="checkbox" id={e.Codigo_M + "-" + e.Grupo_UM} />
+                <label className="form-check-label" htmlFor={e.Codigo_M + "-" + e.Grupo_UM}>
                   {e.Grupo_UM + " - " + e.Nombre_M}
                 </label>
               </div>
