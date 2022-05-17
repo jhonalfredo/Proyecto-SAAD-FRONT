@@ -45,7 +45,7 @@ export default function Aceptadas() {
 
   const recuperarMisSolAceptadas = async () => {
     const rutainicio = "/api/listarAceptadasDoc/" + misDatos.codigosis;
-    console.log("ruta.....", rutainicio)
+    console.log("rutaaceptadas.....", rutainicio)
     let v = await axios.get(rutainicio);
     //setDatos(v.data);
     let datos = unirDatosSolicitud(v.data);
