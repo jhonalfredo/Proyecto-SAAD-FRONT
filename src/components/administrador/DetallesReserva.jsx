@@ -1,37 +1,138 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import ModalConfirmacion from "../docente/ModalConfirmacion";
 
+const AULAS = [
+  {
+    Id_A: "690A",
+    Capacidad_A: 75,
+    Edificio_A: "NUEVO EDIF. ACADEMICO 2 (FCYT)",
+  },
+  {
+    Id_A: "690B",
+    Capacidad_A: 75,
+    Edificio_A: "NUEVO EDIF. ACADEMICO 2 (FCYT)",
+  },
+  {
+    Id_A: "690C",
+    Capacidad_A: 75,
+    Edificio_A: "NUEVO EDIF. ACADEMICO 2 (FCYT)",
+  },
+];
 
 function DetallesReserva() {
   const parametros = useParams();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [mensajeAccionSolicitud, setMensajeAccionSolicitud] = useState("");
   const [reserva, setReserva] = useState({
-    id: 1,
-    estado: "atendido",
-    materia: "Introduccion a la programacion",
-    grupos: [
-      //{ idGrupo: 1, codigoGrupo: "02", docenteGrupo: "Leticia" },
-      "02 - Leticia Blanco Coca",
-      "ME - Rosemary Salazar",
-      "F1 - Patricia Romero",
+    detalle: [
+      {
+        Id_SR: 1,
+        materia_Codigo_M: 2006018,
+        Fecha_SR: "2022-03-25",
+        Hora_Inicio_SR: "06:45:00",
+        Cantidad_Periodos_SR: 2,
+        Numero_Estudiantes_SR: 200,
+        Estado_Atendido_SR: 1,
+        Motivo_SR: "no hay motivo",
+        Hora_Final_SR: "08:15:00",
+        Creado_en_SR: "2022-03-20 03:14:07",
+        Codigo_M: 2006018,
+        Nombre_M: "FISICA BASICA I",
+        Id_RR: 1,
+        Estado_RR: "1",
+        Observacion_RR: "No hay observacion",
+        Fecha_Reporte_RR: "2022-05-13",
+        solicitud_reserva_Id_SR: 1,
+        usuario_Codigo_SIS_U: 201801450,
+      },
     ],
-    nroEstudiantes: 135,
-    fecha: "25/06/2022",
-    horaInicio: "18:45",
-    horaFin: "21:45",
-    periodos: 2,
-    motivo:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+    grupos: [
+      {
+        Id_G_US: "F1",
+        Codigo_M: 2006018,
+        Nombre_M: "FISICA BASICA I",
+        Nombre_U: "JOSE ROBERTO",
+        Apellido_Paterno_U: "PEREZ",
+        Apellido_Materno_U: "CESPEDES",
+        Codigo_SIS_U: 201801450,
+      },
+      {
+        Id_G_US: "H1",
+        Codigo_M: 2006018,
+        Nombre_M: "FISICA BASICA I",
+        Nombre_U: "JOSE ROBERTO",
+        Apellido_Paterno_U: "PEREZ",
+        Apellido_Materno_U: "CESPEDES",
+        Codigo_SIS_U: 201801450,
+      },
+    ],
+    aulas: [
+      {
+        Id_A: "690A",
+        Capacidad_A: 75,
+        Edificio_A: "NUEVO EDIF. ACADEMICO 2 (FCYT)",
+      },
+      {
+        Id_A: "690B",
+        Capacidad_A: 75,
+        Edificio_A: "NUEVO EDIF. ACADEMICO 2 (FCYT)",
+      },
+      {
+        Id_A: "690C",
+        Capacidad_A: 65,
+        Edificio_A: "NUEVO EDIF. ACADEMICO 2 (FCYT)",
+      },
+    ],
   });
 
-  // useEffect(() => {
-  //   axios
-  //     .get("http://localhost:4200/obtener-detalles-reserva/" + parametros.id)
-  //     .then((reservaObtenida) => {
-  //      setReserva(reservaObtenida);
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios
+      .get("/api/detalleReservaAtendida/" + parametros.id)
+      .then((reservaObtenida) => {
+        setReserva(reservaObtenida.data);
+      });
+  }, []);
+
+  const aceptarSolicitud = () => {
+    const texto = localStorage.getItem("datosUser");
+    const datosUser = JSON.parse(texto);
+    const datos = {
+      aulas: ["691HB"] /* aulasSeleccionadas */,
+      observacion: "fdsadf" /* observacion */,
+      idReserva: reserva.Id_SR,
+      codSIS: datosUser.codigoSis,
+      fechaReserva: reserva.Fecha_SR,
+      horaInicio: reserva.Hora_Inicio_SR,
+      periodos: reserva.Cantidad_Periodos_SR,
+    };
+    axios
+      .post("/aceptarSolicitud", datos)
+      .then((respuesta) =>
+        setMensajeAccionSolicitud("Se ha registrado la solicitud correctamente")
+      )
+      .catch((error) =>
+        setMensajeAccionSolicitud("Algo salió mal durante el registro")
+      );
+  };
+
+  const rechazarSolicitud = () => {
+    const texto = localStorage.getItem("datosUser");
+    const datosUser = JSON.parse(texto);
+    const datos = {
+      observacion: "" /* observacion */,
+      idReserva: reserva.Id_SR,
+      codSIS: datosUser.codigoSis,
+    };
+    axios
+      .post("/rechazarSolicitud", datos)
+      .then((respuesta) =>
+        setMensajeAccionSolicitud("Se ha rechazado la solicitud")
+      )
+      .catch((error) => setMensajeAccionSolicitud("Algo salió mal"));
+  };
 
   return (
     <Container>
@@ -39,17 +140,22 @@ function DetallesReserva() {
       <Row className="justify-content-md-center">
         <Col md={3}>
           <p className="etiqueta">ID</p>
-          <p className="contenido">{reserva.id}</p>
+          <p className="contenido">{reserva.detalle[0].Id_SR}</p>
         </Col>
         <Col md={3}>
           <p className="etiqueta">Estado</p>
-          <p className="contenido">{reserva.estado}</p>
+          <p className="contenido">
+            {reserva.detalle[0].Estado_Atendido_SR == 0
+              ? "Rechazado"
+              : "Aceptado"}
+          </p>
         </Col>
       </Row>
       <Row className="justify-content-md-center">
         <Col md={6}>
           <p className="etiqueta">Materia</p>
-          <p className="contenido">{reserva.materia}</p>
+
+          <p className="contenido">{reserva.detalle[0].Nombre_M}</p>
         </Col>
       </Row>
       <Row className="justify-content-md-center">
@@ -58,7 +164,8 @@ function DetallesReserva() {
           {reserva.grupos.map(function (grupo, indice) {
             return (
               <p className="contenido" key={indice}>
-                {grupo}
+                {grupo.Id_G_US} - {grupo.Nombre_U} {grupo.Apellido_Paterno_U}{" "}
+                {grupo.Apellido_Materno_U}
               </p>
             );
           })}
@@ -67,33 +174,62 @@ function DetallesReserva() {
       <Row className="justify-content-md-center">
         <Col md={3}>
           <p className="etiqueta">Nro estudiantes</p>
-          <p className="contenido">{reserva.nroEstudiantes}</p>
+          <p className="contenido">
+            {reserva.detalle[0].Numero_Estudiantes_SR}
+          </p>
         </Col>
         <Col md={3}>
           <p className="etiqueta">Fecha</p>
-          <p className="contenido">{reserva.fecha}</p>
+          <p className="contenido">{reserva.detalle[0].Fecha_SR}</p>
         </Col>
       </Row>
       <Row className="justify-content-md-center">
         <Col md={2}>
           <p className="etiqueta">Horario inicio</p>
-          <p className="contenido">{reserva.horaInicio}</p>
+          <p className="contenido">{reserva.detalle[0].Hora_Inicio_SR}</p>
         </Col>
         <Col md={2}>
           <p className="etiqueta">Horario fin</p>
-          <p className="contenido">{reserva.horaFin}</p>
+          <p className="contenido">{reserva.detalle[0].Hora_Final_SR}</p>
         </Col>
         <Col md={2}>
           <p className="etiqueta">Periodos</p>
-          <p className="contenido">{reserva.periodos}</p>
+          <p className="contenido">{reserva.detalle[0].Cantidad_Periodos_SR}</p>
         </Col>
       </Row>
       <Row className="justify-content-md-center">
         <Col md={6}>
           <p className="etiqueta">Motivo</p>
-          <p className="contenido">{reserva.motivo}</p>
+          <p className="contenido">{reserva.detalle[0].Motivo_SR}</p>
         </Col>
       </Row>
+      <Row className="justify-content-md-center">
+        <Col md={6}>
+          <p className="etiqueta">Aula Asignada</p>
+          {reserva.aulas.map(function (aulas, indice) {
+            return (
+              <p className="contenido" key={indice}>
+                {aulas.Id_A} - {"Capacidad de "} {aulas.Capacidad_A}{" "}
+                {"estudiantes "}-{aulas.Edificio_A}
+              </p>
+            );
+          })}
+        </Col>
+      </Row>
+      {!!mensajeAccionSolicitud && (
+        <div style={{ borderColor: "gray", borderWidth: "1px" }}>
+          <img src="imagencheckbox"></img>
+          <p>{mensajeAccionSolicitud}</p>
+        </div>
+      )}
+      <Button onClick={aceptarSolicitud}>Aceptar solicitud</Button>
+      <Button onClick={() => setModalVisible(true)}>Rechazar solicitud</Button>
+      <ModalConfirmacion
+        modalVisible={modalVisible}
+        texto="¿Está seguro de rechazar la solicitud de reserva?"
+        accionAceptar={rechazarSolicitud}
+        accionCancelar={() => setModalVisible(false)}
+      />
     </Container>
   );
 }

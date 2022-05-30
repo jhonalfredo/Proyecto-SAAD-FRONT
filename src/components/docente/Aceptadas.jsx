@@ -2,6 +2,8 @@ import React from 'react'
 import MenuDoc from './MenuDoc'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import { Link } from 'react-router-dom';
 
 export default function Aceptadas() {
 
@@ -56,14 +58,34 @@ export default function Aceptadas() {
   const unirGrupos = (datos) => {
     let res = "";
     datos.forEach(e => {
-      res = res + e.Id_Grupo_GSR + ", ";
+      res = res + e.Id_G_US + ", ";
     });
     return res;
   }
-  const cancelarAceptada = async (e) => {
+  const cancelarAceptada = async (total) => {
+    let e = total[0];
+    Swal.fire({
+      title: '¿Esta seguro de cancelar esta reserva?',
+      text: "Se cancelará la reserva para los grupos: "+unirGrupos(total)+" de la materia "+e.Nombre_M,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí',
+      cancelButtonText: 'No'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        cancelarAceptadaBD(e);
+      }
+    })
+    
+  }
+  
+  const cancelarAceptadaBD = async (e) =>{
     const ruta = "/api/cancelarAceptada/" + e.Id_SR;
     console.log(ruta);
     await axios.patch(ruta);
+    recuperarMisSolAceptadas();
   }
 
   return (
@@ -78,8 +100,8 @@ export default function Aceptadas() {
               <th className="id">ID</th>
               <th scope="col">Materia</th>
               <th className="col">Grupo</th>
-              <th scope="col">Fecha Solitada</th>
-              <th className="col">Fecha reserva</th>
+              <th scope="col">Fecha Reserva</th>
+              
               <th scope="col">Hora reserva</th>
               <th scope="col">Opciones</th>
             </tr>
@@ -93,12 +115,12 @@ export default function Aceptadas() {
                 <td>{e[0].Id_SR}</td>
                 <td>{e[0].Nombre_M}</td>
                 <td>{unirGrupos(e)}</td>
-                <td>{e[0].Creado_en_SR}</td>
-                <td>1/1/2021</td>
+                <td>{e[0].Fecha_SR}</td>
+                
                 <td>{e[0].Hora_Inicio_SR}</td>
                 <td>
-                  <button className='btn btn-danger' onClick={() => cancelarAceptada(e[0])}>Cancelar</button>
-                  <button className='btn btn-success'>Mas...</button>
+                  <button className='btn btn-danger' onClick={() => cancelarAceptada(e)}>Cancelar</button>
+                  <Link to={String(e[0].Id_SR)} className='btn btn-warning'>Detalle</Link>
                 </td>
               </tr>
             )}

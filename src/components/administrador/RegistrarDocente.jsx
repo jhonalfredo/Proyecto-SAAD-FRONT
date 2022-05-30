@@ -29,8 +29,8 @@ const esApellidoPaternoValido = useMemo(() => {
   }, [apellidoMaterno])
 
   const esCodigoSisValido = useMemo(() => {
-    return codigoSis.length < 10;
-  }, [codigoSis])
+    return codigoSis.length == 9 && /^\d+$/.test(codigoSis);
+  }, [codigoSis]);
 
   const esCorreoElectronicoValido = useMemo(() => {
     return correoElectronico.length == 0 || /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(correoElectronico);
@@ -41,7 +41,7 @@ const esApellidoPaternoValido = useMemo(() => {
     e.preventDefault();
     const datosDocente = {
       'Nombre_U' : nombre,
-      'Apelllido_Paterno_U': apellidoPaterno,
+      'Apellido_Paterno_U': apellidoPaterno,
       'Apellido_Materno_U': apellidoMaterno,
       'Codigo_SIS_U':codigoSis,
       'Correo_U':correoElectronico,
@@ -172,7 +172,7 @@ const esApellidoPaternoValido = useMemo(() => {
                   value={codigoSis}
                   onChange={cambiarCodigoSis}
                   isInvalid={!esCodigoSisValido}
-                  type="text"
+                  type="number"
                 />
                 <Form.Control.Feedback type="invalid">
                   Ingrese un codigo SIS valido

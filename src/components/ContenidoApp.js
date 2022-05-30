@@ -17,6 +17,8 @@ import FormsPage from './docente/FormsPage';
 import NuevaReserva from './jncomp/NuevaReserva';
 import RegistrarDocente from './administrador/RegistrarDocente';
 import AdmAceptSolDocente from './administrador/AdmAceptSolDocente';
+import SolResPr from './docente/SolResPr';
+import DetalleReservaVista from './docente/DetalleReservaVista';
 
 export default function ContenidoApp() {
   return (
@@ -25,7 +27,8 @@ export default function ContenidoApp() {
             <Route path='/' element={<IniciarSesion/>}></Route>
             <Route path='/docente' element={<NuevaReserva/>}></Route>
             <Route path='/docente/mis-reservas' element={<DocMisReservas/>}></Route>
-            <Route path='/docente/solicitar-reserva' element={<DocSolReserva/>}></Route>
+            <Route path='/docente/mis-reservas/:id' element={<DetalleReservaVista/>}></Route>
+            <Route path='/docente/solicitar-reserva' element={<SolResPr/>}></Route>
             <Route path='/administrador' element={<Administrador/>}></Route>
             <Route path='/administrador/solicitudes' element={<AdmSolDocentes/>}></Route>
             <Route path='/administrador/solicitudes/:id' element={<AdmAceptSolDocente/>}></Route>

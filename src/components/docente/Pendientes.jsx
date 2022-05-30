@@ -3,6 +3,8 @@ import MenuDoc from './MenuDoc'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import DetallesReserva from '../administrador/DetallesReserva';
+import Swal from 'sweetalert2';
+import { Link } from 'react-router-dom';
 
 export default function Pendientes() {
 
@@ -57,14 +59,36 @@ export default function Pendientes() {
   const unirGrupos = (datos) => {
     let res = "";
     datos.forEach(e => {
-      res = res + e.Id_Grupo_GSR + ", ";
+      res = res + e.Id_G_US + ", ";
     });
     return res;
   }
-  const cancelarPendiente = async (e) => {
+  const cancelarPendiente = async (total) => {
+    let e = total[0];
+
+    Swal.fire({
+      title: '¿Esta seguro de cancelar esta reserva?',
+      text: "Se cancelará la reserva para los grupos: "+unirGrupos(total)+" de la materia "+e.Nombre_M,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí',
+      cancelButtonText: 'No'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        cancelarPendienteBD(e);
+      }
+    })
+
+    
+  }
+
+  async function cancelarPendienteBD(e){
     const ruta = "/api/cancelarPendiente/" + e.Id_SR;
     console.log(ruta);
     await axios.patch(ruta);
+    recuperarMisSolPendientes();
   }
 
   return (
@@ -80,7 +104,7 @@ export default function Pendientes() {
               <th scope="col">Materia</th>
               <th className="col">Grupo</th>
               <th scope="col">Fecha Solitada</th>
-              <th className="col">Fecha reserva</th>
+              
               <th scope="col">Hora reserva</th>
               <th scope="col">Opciones</th>
             </tr>
@@ -95,11 +119,11 @@ export default function Pendientes() {
                 <td>{e[0].Nombre_M}</td>
                 <td>{unirGrupos(e)}</td>
                 <td>{e[0].Creado_en_SR}</td>
-                <td>1/1/2021</td>
+                
                 <td>{e[0].Hora_Inicio_SR}</td>
                 <td>
-                  <button className='btn btn-danger' onClick={() => cancelarPendiente(e[0])}>Cancelar</button>
-                  <button className='btn btn-success'>Mas...</button>
+                  <button className='btn btn-danger' onClick={() => cancelarPendiente(e)}>Cancelar</button>
+                  <Link to={String(e[0].Id_SR)} className='btn btn-warning'>Detalle</Link>
                 </td>
               </tr>
             )}

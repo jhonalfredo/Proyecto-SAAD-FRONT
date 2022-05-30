@@ -18,7 +18,7 @@ export default function DocSolReserva() {
     const [perR, setPerR] = useState(1);
     const [motivoR, setMotivoR] = useState("");
 
-    const [listaPeriodos, setListaPeriodos] = useState([1,2,3]);
+    const [listaPeriodos, setListaPeriodos] = useState([1, 2, 3]);
     //const ruta = "http://127.0.0.1:8000/api/materias/201801450";
     //const rutaMatGrupo = "http://127.0.0.1:8000/api/grupos/201801450/";
 
@@ -82,29 +82,29 @@ export default function DocSolReserva() {
         }*/
         //console.log("add", indice.target.value)
     }
-/*
-    function eliminarME(elemento) {
-        var listaNueva = listaME.filter(dato => dato !== elemento);
-        setListaME(listaNueva);
-    }
-
-    function unirPalabras(e) {
-        return e.Grupo_UM + "-" + e.Nombre_M;
-    }
-
-    function enviarDatos() {
-        var datosEnviar = {
-            numero: numEst,
-            lista: listaME,
-            fecha: fechaR,
-            hora: horarioR,
-            periodos: perR
+    /*
+        function eliminarME(elemento) {
+            var listaNueva = listaME.filter(dato => dato !== elemento);
+            setListaME(listaNueva);
         }
-
-        console.log("numest", datosEnviar);
-    }
-*/
-    const generarHorario = (horaini, periodos)=>{
+    
+        function unirPalabras(e) {
+            return e.Grupo_UM + "-" + e.Nombre_M;
+        }
+    
+        function enviarDatos() {
+            var datosEnviar = {
+                numero: numEst,
+                lista: listaME,
+                fecha: fechaR,
+                hora: horarioR,
+                periodos: perR
+            }
+    
+            console.log("numest", datosEnviar);
+        }
+    */
+    const generarHorario = (horaini, periodos) => {
         /*console.log("cambio de horario tile", horaini, periodos)
         let indice = horarios.indexOf(horaini);
         //console.log("horarios.............", periodos);
@@ -122,26 +122,31 @@ export default function DocSolReserva() {
         console.log("AdjSel", misAdjuntosSel);
         console.log("AdjTotal", gruposAdjuntos);
 
-        let listaDocReserva = [datosUser.codigosis];
+        let listaDocReserva = [];//[datosUser.codigosis];
 
-        for(let k = 0; k< misAdjuntosSel.length; k++){
+        for (let k = 0; k < misGruposSel.length; k++) {
+            listaDocReserva.push(datosUser.codigosis);
+        }
+
+        for (let k = 0; k < misAdjuntosSel.length; k++) {
             listaDocReserva.push(misAdjuntosSel[k].Codigo_SIS_U);
         }
 
-        
+
         console.log("docentes que se agregan:", listaDocReserva);
-        let docListaFinal = listaDocReserva.filter((item,index)=>{
+        let docListaFinal = listaDocReserva;
+        /*let docListaFinal = listaDocReserva.filter((item, index) => {
             return listaDocReserva.indexOf(item) === index;
-        });
+        });*/
 
         console.log("docente que se agregan sin repetir", docListaFinal);
 
         let gruposEnviar = [];
-        for(let x = 0;x<misGruposSel.length;x++){
+        for (let x = 0; x < misGruposSel.length; x++) {
             gruposEnviar.push(misGruposSel[x].Grupo_UM);
         }
 
-        for(let y=0;y<misAdjuntosSel.length;y++){
+        for (let y = 0; y < misAdjuntosSel.length; y++) {
             gruposEnviar.push(misAdjuntosSel[y].Grupo_UM);
         }
 
@@ -176,13 +181,14 @@ export default function DocSolReserva() {
             Hora_Final_SR: "17:15"
         }
         console.log("ejemplo datos", datosNuevos);
-        
+
         //registrarSolicitudReserva(datosNuevos);
 
         registrarSolicitudReserva(datosEnviar);
     }
 
     const registrarSolicitudReserva = async (valor) => {
+        console.log("dato que se envian", valor);
         const ruta = "/api/reservaCompartida";
         await axios.post(ruta, valor);
     }
@@ -213,44 +219,44 @@ export default function DocSolReserva() {
         }
     }
 
-    const insertarHorarioMateria = (e) =>{
+    const insertarHorarioMateria = (e) => {
         console.log("insertamosfront", e);
         setHorarioR(e);
-        
+
         /*let indice = horarios.indexOf(e);
         let nuevi = indice+perR-1;
         if(nuevi>=0&&nuevi<=9){
             let horafinal = horariosFin[nuevi];
             setHorarioRFin(horafinal);
         }*/
-        
-        
+
+
 
         ///console.log("indice", horarios.indexOf(e));
         let indice = horarios.indexOf(e);
         //setHorarioR(e)
-        if(indice===(horarios.length-1)){
+        if (indice === (horarios.length - 1)) {
             setListaPeriodos([1]);
             setPerR(1);
             //generarHorario(horarioR, 1)
-        }else if(indice===(horarios.length-2)){
-            setListaPeriodos([1,2]);
-            if(Number(perR)===3){
+        } else if (indice === (horarios.length - 2)) {
+            setListaPeriodos([1, 2]);
+            if (Number(perR) === 3) {
                 setPerR(1);
                 //generarHorario(horarioR, 1)
             }
             //generarHorario(horarioR, perR)
-            
-        }else if(indice>=0){
-            setListaPeriodos([1,2,3])
+
+        } else if (indice >= 0) {
+            setListaPeriodos([1, 2, 3])
             //generarHorario(horarioR, perR)
         }
     }
 
-    const insertarPerdiodoNuevo = (e) =>{
+    const insertarPerdiodoNuevo = (e) => {
         console.log("insertamosper", e)
         setPerR(e);
-        
+
         /*let indice = horarios.indexOf(horarioR);
         let nuevi = indice+e-1;
         if(nuevi>=0&&nuevi<=9){
@@ -261,15 +267,15 @@ export default function DocSolReserva() {
         //generarHorario(horarioR, e);
     }
 
-    const concatHorario = (horainicial, per) =>{
+    const concatHorario = (horainicial, per) => {
         var res = "";
         let indice = horarios.indexOf(horainicial);
         //console.log("horarios.............", periodos);
-        let nuevi = indice+per-1;
-        if(nuevi>=0&&nuevi<=9){
+        let nuevi = indice + per - 1;
+        if (nuevi >= 0 && nuevi <= horarios.length) {
             let horafinal = horariosFin[nuevi];
             horariofin = horafinal;
-            res = horainicial+" - "+horafinal
+            res = horainicial + " - " + horafinal
         }
 
         return res;
@@ -279,7 +285,7 @@ export default function DocSolReserva() {
         <div>
             <MenuDoc />
             <h1>Solicitar</h1>
-            <form onSubmit={(e) => hacerAccion(e)} className="p-3">
+            <form onSubmit={(e) => hacerAccion(e)} className="p-3 needs-validation">
 
                 <div className="row">
                     <div className="col">
@@ -291,6 +297,14 @@ export default function DocSolReserva() {
                                 )}
                             </select>
                         </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label htmlFor="validationCustom03" className="form-label">City</label>
+                        <input type="text" class="form-control" id="validationCustom03" required/>
+                            <div className="invalid-feedback">
+                                Please provide a valid city.
+                            </div>
                     </div>
 
                     <div className="col">
@@ -337,18 +351,18 @@ export default function DocSolReserva() {
                             <div className="col mb-3">
                                 <select defaultValue={'DEFAULT'} className="form-select" aria-label="Default select example" onChange={(e) => insertarPerdiodoNuevo(Number(e.target.value))}>
                                     {
-                                        
-                                    listaPeriodos.map((e)=>{
-                                        return <option key ={e} value={e}>{e}</option>
-                                    })}
+
+                                        listaPeriodos.map((e) => {
+                                            return <option key={e} value={e}>{e}</option>
+                                        })}
                                 </select>
-                                
+
                             </div>
                         </div>
 
                     </div>
 
-                   
+
 
                     <div className="col mb-3">
                         <div>
@@ -366,7 +380,7 @@ export default function DocSolReserva() {
                                                 <div className="form-check">
                                                     <input className="form-check-input" onChange={(objeto) => listarAdjuntosMateria(e, objeto.target.checked)} type="checkbox" id={codMateriaActual + "-" + e.Grupo_UM} />
                                                     <label className="form-check-label" htmlFor={codMateriaActual + "-" + e.Grupo_UM}>
-                                                        {e.Grupo_UM+" - "+e.Nombre_U+" "+e.Apellido_Paterno_U+" "+e.Apellido_Materno_U+" - "+e.Codigo_SIS_U}
+                                                        {e.Grupo_UM + " - " + e.Nombre_U + " " + e.Apellido_Paterno_U + " " + e.Apellido_Materno_U + " - " + e.Codigo_SIS_U}
                                                     </label>
                                                 </div>
                                             </div>
@@ -380,11 +394,12 @@ export default function DocSolReserva() {
 
                 <div className="mb-3">
                     <label htmlFor="exampleFormControlTextarea1" className="form-label">Motivo</label>
-                    <textarea onChange={(e)=>setMotivoR(e.target.value)} className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    <textarea maxLength={200} onChange={(e) => setMotivoR(e.target.value)} className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    <div id="emailHelp" class="form-text">{motivoR.length} caracteres</div>
                 </div>
 
                 <button type="button" className="btn btn-danger">Cancelar</button>
-                <button type="submit" className="btn btn-primary">Solicitar</button>
+                <button type="submit" className="btn btn-primary">Enviar Solicitud</button>
 
             </form>
         </div>
