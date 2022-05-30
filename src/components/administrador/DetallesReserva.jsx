@@ -92,6 +92,7 @@ function DetallesReserva() {
     axios
       .get("/api/detalleReservaAtendida/" + parametros.id)
       .then((reservaObtenida) => {
+        console.log(reservaObtenida.data)
         setReserva(reservaObtenida.data);
       });
   }, []);
