@@ -137,10 +137,10 @@ export default function AdmSolDocentes() {
         res = "Pendiente";
         break;
       case 1:
-        res = "Aceptada";
+        res = "Atendida";
         break;
       case 2:
-        res = "Rechazada";
+        res = "Cancelada";
         break;
       default:
         break;

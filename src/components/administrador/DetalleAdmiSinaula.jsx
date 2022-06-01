@@ -6,24 +6,6 @@ import ModalConfirmacion from "../docente/ModalConfirmacion";
 import 'bootstrap/js/src/collapse'
 import 'bootstrap/js/src/dropdown';
 
-const AULAS = [
-  {
-    Id_A: "690A",
-    Capacidad_A: 75,
-    Edificio_A: "NUEVO EDIF. ACADEMICO 2 (FCYT)",
-  },
-  {
-    Id_A: "690B",
-    Capacidad_A: 75,
-    Edificio_A: "NUEVO EDIF. ACADEMICO 2 (FCYT)",
-  },
-  {
-    Id_A: "690C",
-    Capacidad_A: 75,
-    Edificio_A: "NUEVO EDIF. ACADEMICO 2 (FCYT)",
-  },
-];
-
 function DetallesReserva() {
   const [observacionR, setObservacionR] = useState("");
   const parametros = useParams();
@@ -44,12 +26,12 @@ function DetallesReserva() {
         Creado_en_SR: "2022-03-20 03:14:07",
         Codigo_M: 2006018,
         Nombre_M: "FISICA BASICA I",
-        /*Id_RR: 1,
+        Id_RR: 1,
         Estado_RR: "1",
         Observacion_RR: "No hay observacion",
         Fecha_Reporte_RR: "2022-05-13",
         solicitud_reserva_Id_SR: 1,
-        usuario_Codigo_SIS_U: 201801450,*/
+        usuario_Codigo_SIS_U: 201801450,
       },
     ],
     grupos: [
@@ -106,7 +88,7 @@ function DetallesReserva() {
     const datosUser = JSON.parse(texto);
     const datos = {
       aulas: ["691HB"] /* aulasSeleccionadas */,
-      observacion: observacionR /* observacion */,
+      observacion: "fdsadf" /* observacion */,
       idReserva: reserva.detalle[0].Id_SR,
       codSIS: datosUser.codigoSis,
       fechaReserva: reserva.detalle[0].Fecha_SR,
@@ -208,19 +190,6 @@ function DetallesReserva() {
           <p className="contenido">{reserva.detalle[0].Motivo_SR}</p>
         </Col>
       </Row>
-      <Row className="justify-content-md-center">
-        <Col md={6}>
-          <p className="etiqueta">Aula Asignada</p>
-          {/*reserva.aulas.map(function (aulas, indice) {
-            return (
-              <p className="contenido" key={indice}>
-                {aulas.Id_A} - {"Capacidad de "} {aulas.Capacidad_A}{" "}
-                {"estudiantes "}-{aulas.Edificio_A}
-              </p>
-            );
-          })*/}
-        </Col>
-      </Row>
       {!!mensajeAccionSolicitud && (
         <div style={{ borderColor: "gray", borderWidth: "1px" }}>
           <img src="imagencheckbox"></img>
@@ -229,7 +198,7 @@ function DetallesReserva() {
       )}
 
       <button className="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-        Mostrar grupos
+        Atender Solicitud
       </button>
       <div className="collapse" id="collapseExample">
         <div className="card card-body">

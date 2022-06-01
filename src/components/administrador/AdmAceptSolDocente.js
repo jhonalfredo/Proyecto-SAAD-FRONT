@@ -28,10 +28,10 @@ export default function AdmAceptSolDocente() {
   }
 
   async function recuperarDatosReserva() {
-    const rutainicio = "/api/detalleReserva/" + id;
+    const rutainicio = "/api/detalleReservaPendiente/" + id;
     let datosRes = await axios.get(rutainicio);
     let datos = datosRes.data;
-    console.log(datos.detalle[0].Fecha_SR);
+    //console.log(datos.detalle[0].Fecha_SR);
     console.log(datosRes.data);
     let horaInicio = datos.detalle[0].Hora_Inicio_SR;
     let separacion = horaInicio.split(":");
@@ -175,7 +175,7 @@ export default function AdmAceptSolDocente() {
               <div className="form-check">
                 <input className="form-check-input" onChange={(objeto) => listarGruposMateria(e, objeto.target.checked)} type="checkbox" id={e.Id_A} />
                 <label className="form-check-label" htmlFor={e.Id_A}>
-                  {e.Id_A}
+                  {e.Id_A + " - "+e.Edificio_A+" - C:"+e.Capacidad_A}
                 </label>
               </div>
             </div>

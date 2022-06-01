@@ -2,9 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import ModalConfirmacion from "../docente/ModalConfirmacion";
-import 'bootstrap/js/src/collapse'
-import 'bootstrap/js/src/dropdown';
 
 const AULAS = [
   {
@@ -27,8 +24,6 @@ const AULAS = [
 function DetallesReserva() {
   const [observacionR, setObservacionR] = useState("");
   const parametros = useParams();
-  const [modalVisible, setModalVisible] = useState(false);
-  const [mensajeAccionSolicitud, setMensajeAccionSolicitud] = useState("");
   const [reserva, setReserva] = useState({
     detalle: [
       {
@@ -44,12 +39,12 @@ function DetallesReserva() {
         Creado_en_SR: "2022-03-20 03:14:07",
         Codigo_M: 2006018,
         Nombre_M: "FISICA BASICA I",
-        /*Id_RR: 1,
+        Id_RR: 1,
         Estado_RR: "1",
         Observacion_RR: "No hay observacion",
         Fecha_Reporte_RR: "2022-05-13",
         solicitud_reserva_Id_SR: 1,
-        usuario_Codigo_SIS_U: 201801450,*/
+        usuario_Codigo_SIS_U: 201801450,
       },
     ],
     grupos: [
@@ -72,7 +67,6 @@ function DetallesReserva() {
         Codigo_SIS_U: 201801450,
       },
     ],
-    /*
     aulas: [
       {
         Id_A: "690A",
@@ -89,56 +83,16 @@ function DetallesReserva() {
         Capacidad_A: 65,
         Edificio_A: "NUEVO EDIF. ACADEMICO 2 (FCYT)",
       },
-    ],*/
+    ],
   });
 
   useEffect(() => {
     axios
-      .get("/api/detalleReservaPendiente/" + parametros.id)
+      .get("/api/detalleReservaAtendida/" + parametros.id)
       .then((reservaObtenida) => {
-        console.log(reservaObtenida.data)
-        setReserva(reservaObtenida.data);
+        setReserva(reservaObtenida);
       });
   }, []);
-
-  const aceptarSolicitud = () => {
-    const texto = localStorage.getItem("datosUser");
-    const datosUser = JSON.parse(texto);
-    const datos = {
-      aulas: ["691HB"] /* aulasSeleccionadas */,
-      observacion: observacionR /* observacion */,
-      idReserva: reserva.detalle[0].Id_SR,
-      codSIS: datosUser.codigoSis,
-      fechaReserva: reserva.detalle[0].Fecha_SR,
-      horaInicio: reserva.detalle[0].Hora_Inicio_SR,
-      periodos: reserva.detalle[0].Cantidad_Periodos_SR,
-    };
-    axios
-      .post("/aceptarSolicitud", datos)
-      .then((respuesta) =>
-        setMensajeAccionSolicitud("Se ha registrado la solicitud correctamente")
-      )
-      .catch((error) =>
-        setMensajeAccionSolicitud("Algo salió mal durante el registro")
-      );
-  };
-
-  const rechazarSolicitud = () => {
-    const texto = localStorage.getItem("datosUser");
-    const datosUser = JSON.parse(texto);
-    const datos = {
-      observacion: "" /* observacion */,
-      idReserva: reserva.detalle[0].Id_SR,
-      codSIS: datosUser.codigoSis,
-    };
-    axios
-      .post("/rechazarSolicitud", datos)
-      .then((respuesta) =>
-        setMensajeAccionSolicitud("Se ha rechazado la solicitud")
-      )
-      .catch((error) => setMensajeAccionSolicitud("Algo salió mal"));
-  };
-
   return (
     <Container>
       <h1>Detalle de reserva</h1>
@@ -155,6 +109,7 @@ function DetallesReserva() {
               : "Aceptado"}
           </p>
         </Col>
+        
       </Row>
       <Row className="justify-content-md-center">
         <Col md={6}>
@@ -211,56 +166,16 @@ function DetallesReserva() {
       <Row className="justify-content-md-center">
         <Col md={6}>
           <p className="etiqueta">Aula Asignada</p>
-          {/*reserva.aulas.map(function (aulas, indice) {
+          {reserva.aulas.map(function (aulas, indice) {
             return (
               <p className="contenido" key={indice}>
                 {aulas.Id_A} - {"Capacidad de "} {aulas.Capacidad_A}{" "}
                 {"estudiantes "}-{aulas.Edificio_A}
               </p>
             );
-          })*/}
+          })}
         </Col>
       </Row>
-      {!!mensajeAccionSolicitud && (
-        <div style={{ borderColor: "gray", borderWidth: "1px" }}>
-          <img src="imagencheckbox"></img>
-          <p>{mensajeAccionSolicitud}</p>
-        </div>
-      )}
-
-      <button className="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-        Mostrar grupos
-      </button>
-      <div className="collapse" id="collapseExample">
-        <div className="card card-body">
-          <div className=''>
-          <form class="row g-3 needs-validation" novalidate onSubmit={(e) => { e.preventDefault() }}>
-                <Row className="justify-content-md-center">
-                  <Col md={6}>
-                    <label for="validationCustom03" class="form-label">City</label>
-                    <input type="text" class="form-control" id="validationCustom03" required maxLength={500} onChange={(e) => setObservacionR(e.target.value)} />
-                    <div id="emailHelp" class="form-text">{observacionR.length} caracteres</div>
-                    <div class="invalid-feedback">
-                      Please provide a valid city.
-                    </div>
-                  </Col>
-                </Row>
-                <Button type="submit" onClick={()=>aceptarSolicitud()}>Aceptar solicitud</Button>
-                <Button onClick={() => setModalVisible(true)}>Rechazar solicitud</Button>
-              </form>
-              <ModalConfirmacion
-                modalVisible={modalVisible}
-                texto="¿Está seguro de rechazar la solicitud de reserva?"
-                accionAceptar={rechazarSolicitud}
-                accionCancelar={() => setModalVisible(false)}
-              />
-          </div>
-        </div>
-      </div>
-
-    
-
-
     </Container>
   );
 }

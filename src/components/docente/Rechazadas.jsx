@@ -3,6 +3,7 @@ import MenuDoc from './MenuDoc'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import DetallesReserva from '../administrador/DetallesReserva';
+import { Link } from 'react-router-dom';
 
 export default function Rechazadas() {
 
@@ -67,6 +68,13 @@ export default function Rechazadas() {
   //   await axios.patch(ruta);
   // }
 
+  const unirGrupos = (datos) => {
+    let res = "";
+    datos.forEach(e => {
+      res = res + e.Id_G_US + ", ";
+    });
+    return res;
+  }
   return (
     <>
       <div className="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -76,12 +84,13 @@ export default function Rechazadas() {
         <table className="table">
           <thead>
             <tr>
-              <th style={{width: "5%"}} className="id">Id</th>
-              <th style={{width: "15%"}} scope ="col">Fecha Atendida</th>
-              <th style={{width: "30%"}} scope="col">Materia</th>
-              <th style={{width: "15%"}} scope="col">Fecha Reserva</th>
-              <th style={{width: "15%"}} className="col">Hora reserva</th>
-              <th style={{width: "20%"}} scope="col">Opciones</th>
+              <th  className="id">Id</th>
+              <th  scope ="col">Fecha Atendida</th>
+              <th  scope="col">Materia</th>
+              <th  scope="col">Grupo</th>
+              <th  scope="col">Fecha Reserva</th>
+              <th  className="col">Hora reserva</th>
+              <th  scope="col">Opciones</th>
             </tr>
           </thead>
           <tbody>
@@ -93,11 +102,12 @@ export default function Rechazadas() {
                 <td>{e[0].Id_SR}</td>
                 <td>{e[0].Fecha_Reporte_RR}</td>
                 <td>{e[0].Nombre_M}</td>
-                <td>{e[0].Creado_en_SR}</td>
+                <td>{unirGrupos(e)}</td>
+                <td>{e[0].Fecha_SR}</td>
                 <td>{e[0].Hora_Inicio_SR}</td>
                 <td>
                   {/* <button className='btn btn-danger' onClick={() => cancelarPendiente(e[0])}>Cancelar</button> */}
-                  <button className='btn btn-success'>Mas...</button>
+                  <Link to={String(e[0].Id_SR)} className='btn btn-warning'>Detalle</Link>
                 </td>
               </tr>
             )}
