@@ -40,7 +40,7 @@ export default function AdmAceptarSolicitudesDoc() {
         <MenuAdmin/>
         <DetalleSimple datos = {datosRes}/>
         {datosAtendido!==null?<DetalleAtendido datos = {datosAtendido}/>:"..."}
-        {datosAtendido!==null?"nada---":<FormAcepRecSolDoc datos = {datosRes}/>}
+        {datosAtendido!==null?"":<FormAcepRecSolDoc datos = {datosRes}/>}
         
     </div>
   )

@@ -4,43 +4,58 @@ import { Col, Row } from 'react-bootstrap'
 export default function DetalleAtendido(props) {
   console.log(props.datos);
 
-  function tipoSol(estado){
+  function tipoSol(estado) {
     let res = "";
-    if(estado==="0"){
+    if (estado === "0") {
       res = "Rechazada"
-    }else if(estado==="1"){
+    } else if (estado === "1") {
       res = "Aceptada"
-    }else if(estado==="2"){
+    } else if (estado === "2") {
       res = "Cancelada"
     }
     return res;
   }
 
   return (
-    <div>
-        <Row className="justify-content-md-center">
-        <Col md={6}>
-          <p className="etiqueta">Aula Asignada</p>
-          {props.datos.aulas.map(function (aulas, indice) {
+    <div className='px-5'>
+      <div class="card mb-3 w-90">
+        <div class="card-body">
+          <h5 class="card-title">Aula Asignada</h5>
+          <p class="card-text">{props.datos.aulas.map(function (aulas, indice) {
             return (
               <p className="contenido" key={indice}>
                 {aulas.Id_A} - {"Capacidad de "} {aulas.Capacidad_A}{" "}
                 {"estudiantes "}-{aulas.Edificio_A}
               </p>
             );
-          })}
-        </Col>
-        <div>Observación</div>
-          <div>
-            {props.datos.detalle[0].Observacion_RR}
+          })}</p>
+        </div>
+      </div>
+      <div class="card mb-3 w-90">
+        <div class="card-body">
+          <h5 class="card-title">Observación</h5>
+          <p class="card-text">{props.datos.detalle[0].Observacion_RR}</p>
+        </div>
+      </div>
+      <div class="row pb-3">
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Solicitud</h5>
+              <p class="card-text">{tipoSol(props.datos.detalle[0].Estado_RR)}</p>
+            </div>
           </div>
-          <div>Solicitud</div>
-          <div>
-            {tipoSol(props.datos.detalle[0].Estado_RR)}
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Fecha Atendida</h5>
+              <p class="card-text" >
+                {props.datos.detalle[0].Fecha_Reporte_RR}</p>
+            </div>
           </div>
-          <div>Fecha atendida</div>
-          <div>{props.datos.detalle[0].Fecha_Reporte_RR}</div>
-      </Row>
+        </div>
+      </div>
     </div>
   )
 }
