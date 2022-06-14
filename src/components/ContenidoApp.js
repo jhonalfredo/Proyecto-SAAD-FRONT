@@ -21,7 +21,12 @@ import SolResPr from './docente/SolResPr';
 import DetalleReservaVista from './docente/DetalleReservaVista';
 import AdmAceptarSolicitudesDoc from './administrador/AdmAceptarSolicitudesDoc';
 import DocVisualizarDetalles from './docente/DocVisualizarDetalles';
+import MenuDoc from './docente/MenuDoc';
+import AdmEditAdm from './administrador/AdmEditAdm';
+import AdmAdministradores from './administrador/AdmAdministradores';
+import AdmSistema from './administrador/AdmSistema';
 
+//<Route path='/' element={<IniciarSesion/>}></Route>
 export default function ContenidoApp() {
   return (
     <BrowserRouter>
@@ -36,6 +41,9 @@ export default function ContenidoApp() {
             <Route path='/administrador/solicitudes/:id' element={<AdmAceptarSolicitudesDoc/>}></Route>
             <Route path='/administrador/docentes' element={<AdmDocentes/>}></Route>
             <Route path='/administrador/docentes/:id' element={<AdmEditMatDocente/>}></Route>
+            <Route path='/administrador/administradores' element={<AdmAdministradores/>}></Route>
+            <Route path='/administrador/sistema' element={<AdmSistema/>}></Route>
+            <Route path='/administrador/administradores/:id' element={<AdmEditAdm/>}></Route>
             <Route path='/administrador/docentes/registrar' element={<RegistrarDocente/>}></Route>
 
           </Routes>

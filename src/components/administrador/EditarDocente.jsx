@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import Image from "react-bootstrap/Image";
 import Form from "react-bootstrap/Form";
@@ -6,27 +6,50 @@ import Button from "react-bootstrap/Button";
 import MenuAdmin from "./MenuAdmin";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import ModalConfirmacion from "../docente/ModalConfirmacion";
 //import "./Login.css";
 
-function RegistrarDocente() {
+function EditarDocente() {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [mensajeAccionSolicitud, setMensajeAccionSolicitud] = useState("");
   const [nombre, setNombre] = useState("");
   const [apellidoPaterno, setApellidoPaterno] = useState("");
   const [apellidoMaterno, setApellidoMaterno] = useState("");
   const [codigoSis, setCodigoSis] = useState("");
   const [correoElectronico, setCorreoElectronico] = useState("");
   const [contrasenia, setContrasenia] = useState("");
-  const [idRol, setIdRol] = useState(1);
+  const [idRol, setIdRol] = useState(null);
   const navigate = useNavigate();
+  const esNombreValido = useMemo(() => {
+    return nombre.length == 0 || /^[a-zA-Z\s]+$/g.test(nombre);
+  }, [nombre]);
+  const { id } = useParams();
+
+  useEffect(() => {
+    cargarDatos();
+  }, []);
+
+  function cargarDatos(){
+    setModalVisible(false)
+    axios.get("/api/obtenerDocente/" + id).then(dato => {
+      let docente = dato.data[0];
+      console.log("he recuperado....................", docente);
+    setNombre(docente.Nombre_U);
+    setApellidoPaterno(docente.Apellido_Paterno_U);
+    setApellidoMaterno(docente.Apellido_Materno_U);
+    setCodigoSis(docente.Codigo_SIS_U);
+    setCorreoElectronico(docente.Correo_U);
+    setContrasenia(docente.Contrasenia_U);
+    setIdRol(docente.Rol_U);
+  })
+  }
 
   const esContraseniaValida = useMemo(() => {
     return (
       contrasenia.length >= 8
     );
   }, [contrasenia]);
-
-  const esNombreValido = useMemo(() => {
-    return nombre.length == 0 || /^[a-zA-Z\s]+$/g.test(nombre);
-  }, [nombre]);
 
   const esApellidoPaternoValido = useMemo(() => {
     return (
@@ -53,7 +76,7 @@ function RegistrarDocente() {
     );
   }, [correoElectronico]);
 
-  const registrarDocente = async (e) => {
+  const editarDocente = async (e) => {
     e.preventDefault();
     const datosDocente = {
       Nombre_U: nombre,
@@ -75,14 +98,13 @@ function RegistrarDocente() {
       !!nombre &&
       esNombreValido &&
       !!correoElectronico &&
-      esCorreoElectronicoValido &&
+      esCorreoElectronicoValido/* &&
       !!codigoSis &&
-      esCodigoSisValido
-      
+      esCodigoSisValido*/
     ) {
       console.log(datosDocente);
-      await axios.post("/api/registro", datosDocente);
-      alert("El registro de docente fue exitoso!");
+      await axios.patch("/api/editarUsuario", datosDocente);
+      alert("La edicion de docente fue exitoso!");
       navigate("/administrador/solicitudes");
     } else {
       alert(
@@ -106,6 +128,7 @@ function RegistrarDocente() {
       !!codigoSis &&
       esCodigoSisValido
     ) {
+      console.log("prueba");
       var dato = {
         nombre: nombre,
         apellidoP: apellidoPaterno,
@@ -124,11 +147,11 @@ function RegistrarDocente() {
 
   return (
     <div>
-      <MenuAdmin />
+    
       <Container>
         <Row>
           <Col md={12}>
-            <h1>Registrar Usuario</h1>
+            <h1>Editar Datos de docente</h1>
           </Col>
         </Row>
         <Form onSubmit={(e) => enviarDatos(e)}>
@@ -204,6 +227,22 @@ function RegistrarDocente() {
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>Codigo sis</Form.Label>
+                <Form.Control
+                  value={codigoSis}
+                  onChange={cambiarCodigoSis}
+                  disabled
+                  type="number"
+                />
+                <Form.Control.Feedback type="invalid">
+                  Ingrese un codigo SIS válido
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Col>
             <Col md={6}>
               <div class="col-md-3">
                 <label for="validationCustom04" class="form-label">
@@ -215,43 +254,34 @@ function RegistrarDocente() {
                   onChange={(event) => setIdRol(event.target.value)}
                   required
                 >
-                  
-                  <option value="1">Docente</option>
-                  <option value="2">Administrador</option>
-                  <option value="3">Ambos</option>
+                  <option selected disabled value="">
+                    Elegir Rol
+                  </option>
+                
+                    {idRol===1?<option value="1" selected>Docente</option>: <option value="1">Docente</option>}
+                    {idRol===2?<option value="2" selected>Administrador</option>: <option value="2">Administrador</option>}
+                    {idRol===3?<option value="3" selected>Ambos</option>: <option value="3">Ambos</option>}
+                                    
                 </select>
                 <div class="invalid-feedback">Seleccione un Rol</div>
               </div>
             </Col>
           </Row>
-          <Row>
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label>Codigo sis</Form.Label>
-                <Form.Control
-                  value={codigoSis}
-                  onChange={cambiarCodigoSis}
-                  isInvalid={!esCodigoSisValido}
-                  type="number"
-                />
-                <Form.Control.Feedback type="invalid">
-                  Ingrese un codigo SIS válido
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-          </Row>
           <Col md={6}>
-            <Button
-              className="botonRegistrarDocente"
-              onClick={registrarDocente}
-            >
-              Registrar docente
-            </Button>
+            <Button onClick={() => setModalVisible(true)}>Guardar Cambios</Button>
           </Col>
         </Form>
+        <ModalConfirmacion
+                modalVisible={modalVisible}
+                texto="¿Desea guardar los cambios realizados?"
+                accionAceptar={editarDocente}
+                accionCancelar={() =>
+                  cargarDatos()
+                }
+              />
       </Container>
     </div>
   );
 }
 
-export default RegistrarDocente;
+export default EditarDocente;

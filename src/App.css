@@ -28,6 +28,39 @@
     justify-content: center;
     align-items: center;
 }
+.imagenNotif{
+    padding: 7px;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background-color: darkgray;
+    color: black;
+    margin-left: 5px;
+    /**/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contenedornotif{
+    padding-left: 10px;
+    padding-right: 10px;
+    position: relative;
+}
+.topright {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    font-size: 7px;
+    background-color: red;
+    border-radius: 30%;
+    color: white;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    font-weight: bold;
+  }
 
 /*estilos inicias sesion*/
 .contenedorInicio {
@@ -43,6 +76,14 @@
     height: 100vh;
     width: 100vw;
     background-color: rgb(33, 37, 41);
+}
+
+.mainContIniTotal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
 }
 
 .contenedorheaderiniciar {

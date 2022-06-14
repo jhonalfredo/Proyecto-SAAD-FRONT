@@ -37,6 +37,8 @@ export default function SolResPr() {
   
   //horario
   var horariofin = "7:30";
+  const [iniPer, setIniPer] = useState(null);
+  const [finPer, setFinPer] = useState(null)
 
   useEffect(() => {
     console.log("se ejecuta efect");
@@ -47,8 +49,17 @@ export default function SolResPr() {
       //console.log(nuevoDato);
       setDatosUser(nuevoDato);
       recuperarMateriaDoc(nuevoDato.codigosis);
+      recupPeriodo();
+      
     }
   }, []);
+
+  const recupPeriodo = async()=>{
+    let periodo = await (await axios.get("/api/obtenerPeriodoAcademico")).data;
+    //console.log(periodo.data)
+    setIniPer(periodo.Fecha_Inicio_PA)
+    setFinPer(periodo.Fecha_Fin_PA)
+  }
 
   const recuperarMateriaDoc = async (codigosis) => {
     let v = await axios.get("/api/materias/" + codigosis);
@@ -434,6 +445,8 @@ export default function SolResPr() {
                     onChange={(e) => setFechaR(e.target.value)}
                     isInvalid={!esFechaValida}
                     type="date"
+                    max={finPer}
+                    min={iniPer}
 
                   />
                   <Form.Control.Feedback type="invalid">

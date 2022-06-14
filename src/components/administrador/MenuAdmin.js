@@ -23,16 +23,16 @@ export default function MenuAdmin() {
 
     const [datosUser, setDatosUser] = useState(null);
     const navigate = useNavigate();
-    
+
     useEffect(() => {
         const datosRecup = localStorage.getItem("datosUser");
         console.log(datosRecup);
         if (datosRecup) {
             let nuevoDato = JSON.parse(datosRecup);
-            if(nuevoDato.rol!==2&&nuevoDato.rol!==3){
+            if (nuevoDato.rol !== 2 && nuevoDato.rol !== 3) {
                 alert("Usted no es administrador");
                 cerrarSesion();
-            }else{
+            } else {
                 setDatosUser(nuevoDato);
             }
         } else {
@@ -43,11 +43,13 @@ export default function MenuAdmin() {
         //pedirUsuarios();
     }, []);
 
-    function getRolUsuario(){
+    function getRolUsuario() {
         let res = "------";
-        if(datosUser){
-            if(datosUser.rol===2||datosUser.rol===3){
+        if (datosUser) {
+            if (datosUser.rol === 2) {
                 res = "Administrador";
+            }else if(datosUser.rol===3){
+                res = "Administrador/Docente"
             }
         }
         return res
@@ -73,7 +75,7 @@ export default function MenuAdmin() {
     function concatenarNombre() {
         let res = "Cargando...";
         if (datosUser) {
-            res = datosUser.nombre + " " + datosUser.apellido_paterno+" "+datosUser.apellido_materno;
+            res = datosUser.nombre + " " + datosUser.apellido_paterno + " " + datosUser.apellido_materno;
         }
         return res;
     }
@@ -108,6 +110,12 @@ export default function MenuAdmin() {
                             <li className="nav-item">
                                 <NavLink to="/administrador/docentes" className="nav-link">Docentes</NavLink>
                             </li>
+                            <li className="nav-item">
+                                <NavLink to="/administrador/administradores" className="nav-link">Administradores</NavLink>
+                            </li>
+                            <li className="nav-item">
+                                <NavLink to="/administrador/sistema" className="nav-link">Sistema</NavLink>
+                            </li>
 
                         </ul>
                         <span className="navbar-text">
@@ -125,8 +133,8 @@ export default function MenuAdmin() {
 
                                     </div>
                                     <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDarkDropdownMenuLink">
-                                        <li><a className="dropdown-item" href="#">{getRolUsuario()}</a></li>
-                                        <li><a className="dropdown-item" href="#">{datosUser===null? "...":datosUser.codigosis}</a></li>
+                                        {!!datosUser && datosUser.rol == 3 && <li><a className="dropdown-item" href="/docente">Cambiar a Docente</a></li>}
+                                        <li><a className="dropdown-item" href="#">{datosUser === null ? "..." : datosUser.codigosis}</a></li>
                                         <li><a className="dropdown-item" href="#" onClick={() => cerrarSesion()}>Cerrar Sesión</a></li>
                                     </ul>
                                 </li>
