@@ -54,9 +54,9 @@ export default function IniciarSesion(props) {
                         console.log(res.data);
                         localStorage.setItem("datosUser", JSON.stringify(res.data));
                         if(res.data.rol===2||res.data.rol===3){
-                            navigate("administrador/solicitudes");
+                            navigate("administrador");
                         }else if(res.data.rol===1){
-                            navigate("docente/mis-reservas")
+                            navigate("docente")
                         }
                         //navigate("/administrador/solicitudes");
                     } else {

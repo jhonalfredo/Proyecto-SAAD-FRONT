@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import MenuAdmin from "./MenuAdmin";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 //import "./Login.css";
 
 function RegistrarDocente() {
@@ -20,28 +21,28 @@ function RegistrarDocente() {
 
   const esContraseniaValida = useMemo(() => {
     return (
-      contrasenia.length >= 8
+      contrasenia.length >= 8 || contrasenia.length == 0
     );
   }, [contrasenia]);
 
   const esNombreValido = useMemo(() => {
-    return nombre.length == 0 || /^[a-zA-Z\s]+$/g.test(nombre);
+    return nombre.length == 0 || /^[a-zA-Z\s\u00f1\u00d1\u00E0-\u00FC]+$/g.test(nombre);
   }, [nombre]);
 
   const esApellidoPaternoValido = useMemo(() => {
     return (
-      apellidoPaterno.length == 0 || /^[a-zA-Z\s]+$/g.test(apellidoPaterno)
+      apellidoPaterno.length == 0 || /^[a-zA-Z\s\u00f1\u00d1\u00E0-\u00FC]+$/g.test(apellidoPaterno)
     );
   }, [apellidoPaterno]);
 
   const esApellidoMaternoValido = useMemo(() => {
     return (
-      apellidoMaterno.length == 0 || /^[a-zA-Z\s]+$/g.test(apellidoMaterno)
+      apellidoMaterno.length == 0 || /^[a-zA-Z\s\u00f1\u00d1\u00E0-\u00FC]+$/g.test(apellidoMaterno)
     );
   }, [apellidoMaterno]);
 
   const esCodigoSisValido = useMemo(() => {
-    return codigoSis.length == 9 && /^\d+$/.test(codigoSis);
+    return codigoSis.length == 0 || codigoSis.length == 9 && /^\d+$/.test(codigoSis);
   }, [codigoSis]);
 
   const esCorreoElectronicoValido = useMemo(() => {
@@ -52,6 +53,7 @@ function RegistrarDocente() {
       )
     );
   }, [correoElectronico]);
+
 
   const registrarDocente = async (e) => {
     e.preventDefault();
@@ -67,7 +69,7 @@ function RegistrarDocente() {
 
     if (
       !!contrasenia &&
-      esContraseniaValida&&
+      esContraseniaValida &&
       !!apellidoPaterno &&
       esApellidoPaternoValido &&
       !!apellidoMaterno &&
@@ -78,16 +80,36 @@ function RegistrarDocente() {
       esCorreoElectronicoValido &&
       !!codigoSis &&
       esCodigoSisValido
-      
+
     ) {
       console.log(datosDocente);
-      await axios.post("/api/registro", datosDocente);
-      alert("El registro de docente fue exitoso!");
-      navigate("/administrador/solicitudes");
+      let error = false;
+      try {
+        await axios.post("/api/registro", datosDocente);
+      }
+      catch (e) { error = true; }
+      if (error) {
+        Swal.fire(
+          'Error',
+          'Algo salió mal',
+          'error'
+        )
+      }
+      else {
+        if (idRol == 1) {
+          navigate("/administrador/docentes");
+        }
+        else {
+          navigate("/administrador/administradores");
+        }
+        Swal.fire(
+          'Éxito',
+          'El registro se realizó correctamente',
+          'success'
+        )
+      }
+
     } else {
-      alert(
-        "Hay errores en uno o mas campos, y/o uno o mas campos estan vacios, por favor verificar"
-      );
     }
 
     // mandar el objeto datos docente al backend con axios.post('URL', datosDocente)
@@ -155,6 +177,7 @@ function RegistrarDocente() {
                   isInvalid={!esCorreoElectronicoValido}
                   onChange={(event) => setCorreoElectronico(event.target.value)}
                 />
+
                 <Form.Control.Feedback type="invalid">
                   Ingrese un correo electronico válido
                 </Form.Control.Feedback>
@@ -179,6 +202,7 @@ function RegistrarDocente() {
               <Form.Group>
                 <Form.Label>Contraseña</Form.Label>
                 <Form.Control
+                  name="pwd" id="input-pwd"
                   value={contrasenia}
                   isInvalid={!esContraseniaValida}
                   onChange={(event) => setContrasenia(event.target.value)}
@@ -187,7 +211,9 @@ function RegistrarDocente() {
                 <Form.Control.Feedback type="invalid">
                   La contraseña debe contener mínimo de 8 caracteres
                 </Form.Control.Feedback>
+                <span toggle="#input-pwd" class="fa fa-fw fa-eye field-icon toggle-password"></span>
               </Form.Group>
+
             </Col>
           </Row>
           <Row>
@@ -215,7 +241,7 @@ function RegistrarDocente() {
                   onChange={(event) => setIdRol(event.target.value)}
                   required
                 >
-                  
+
                   <option value="1">Docente</option>
                   <option value="2">Administrador</option>
                   <option value="3">Ambos</option>

@@ -22,7 +22,7 @@ function EditarDocente() {
   const [idRol, setIdRol] = useState(null);
   const navigate = useNavigate();
   const esNombreValido = useMemo(() => {
-    return nombre.length == 0 || /^[a-zA-Z\s]+$/g.test(nombre);
+    return nombre.length == 0 || /^[a-zA-Z\s\u00f1\u00d1\u00E0-\u00FC]+$/g.test(nombre);
   }, [nombre]);
   const { id } = useParams();
 
@@ -47,24 +47,24 @@ function EditarDocente() {
 
   const esContraseniaValida = useMemo(() => {
     return (
-      contrasenia.length >= 8
+      contrasenia.length == 0 ||contrasenia.length >= 8
     );
   }, [contrasenia]);
 
   const esApellidoPaternoValido = useMemo(() => {
     return (
-      apellidoPaterno.length == 0 || /^[a-zA-Z\s]+$/g.test(apellidoPaterno)
+      apellidoPaterno.length == 0 || /^[a-zA-Z\s\u00f1\u00d1\u00E0-\u00FC]+$/g.test(apellidoPaterno)
     );
   }, [apellidoPaterno]);
 
   const esApellidoMaternoValido = useMemo(() => {
     return (
-      apellidoMaterno.length == 0 || /^[a-zA-Z\s]+$/g.test(apellidoMaterno)
+      apellidoMaterno.length == 0 || /^[a-zA-Z\s\u00f1\u00d1\u00E0-\u00FC]+$/g.test(apellidoMaterno)
     );
   }, [apellidoMaterno]);
 
   const esCodigoSisValido = useMemo(() => {
-    return codigoSis.length == 9 && /^\d+$/.test(codigoSis);
+    return codigoSis.length == 0 || codigoSis.length == 9 && /^\d+$/.test(codigoSis);
   }, [codigoSis]);
 
   const esCorreoElectronicoValido = useMemo(() => {
@@ -227,22 +227,6 @@ function EditarDocente() {
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
-          </Row>
-          <Row>
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label>Codigo sis</Form.Label>
-                <Form.Control
-                  value={codigoSis}
-                  onChange={cambiarCodigoSis}
-                  disabled
-                  type="number"
-                />
-                <Form.Control.Feedback type="invalid">
-                  Ingrese un codigo SIS válido
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
             <Col md={6}>
               <div class="col-md-3">
                 <label for="validationCustom04" class="form-label">
@@ -265,6 +249,22 @@ function EditarDocente() {
                 </select>
                 <div class="invalid-feedback">Seleccione un Rol</div>
               </div>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>Codigo sis</Form.Label>
+                <Form.Control
+                  value={codigoSis}
+                  onChange={cambiarCodigoSis}
+                  disabled
+                  type="number"
+                />
+                <Form.Control.Feedback type="invalid">
+                  Ingrese un codigo SIS válido
+                </Form.Control.Feedback>
+              </Form.Group>
             </Col>
           </Row>
           <Col md={6}>
