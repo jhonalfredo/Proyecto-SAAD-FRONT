@@ -235,7 +235,7 @@ export default function AdmEditMatDocente(props) {
       </div>
       <nav>
         <div className="nav nav-tabs bg-dark" id="nav-tab" role="tablist">
-          <button className="nav-link active" id="nav-editardoc-tab" data-bs-toggle="tab" data-bs-target="#nav-editardoc" type="button" role="tab" aria-controls="nav-editardoc" aria-selected="true">Añadir Materias</button>
+          <button className="nav-link active" id="nav-editardoc-tab" data-bs-toggle="tab" data-bs-target="#nav-editardoc" type="button" role="tab" aria-controls="nav-editardoc" aria-selected="true">Editar Usuario</button>
           <button className="nav-link" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Añadir Materias</button>
           <button className="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Eliminar Materias</button>
         </div>

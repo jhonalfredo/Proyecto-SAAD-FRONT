@@ -95,7 +95,7 @@ export default function MenuAdmin() {
                     <div>
                         <NavLink to="/administrador" className="navbar-brand" href="#">
                             <img src={logo} alt="" width="50" height="35" className="d-inline-block align-text-top" />
-                            Saad
+                            SAAD
                         </NavLink>
                     </div>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">

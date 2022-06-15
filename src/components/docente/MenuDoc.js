@@ -105,7 +105,7 @@ export default function MenuDoc() {
                     <div>
                         <NavLink to="/docente" className="navbar-brand" href="#">
                             <img src={logo} alt="" width="50" height="35" className="d-inline-block align-text-top" />
-                            Saad
+                            SAAD
                         </NavLink>
                     </div>
 

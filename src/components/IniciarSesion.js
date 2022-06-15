@@ -82,7 +82,7 @@ export default function IniciarSesion(props) {
                 <form onSubmit={(e) => hacerAccion(e)}>
                     <div className="mb-3 fs-4 contenedorheaderiniciar">
                         <img src={logo} alt="" width="50" height="35" className="d-inline-block align-text-top" />
-                        Saad
+                        SAAD
                     </div>
                     <div className="mb-3">
                         <label htmlFor="exampleInputEmail1" className="form-label">Correo</label>

@@ -32,7 +32,7 @@ export default function ContenidoApp() {
     <BrowserRouter>
           <Routes>
             <Route path='/' element={<IniciarSesion/>}></Route>
-            <Route path='/docente' element={<NuevaReserva/>}></Route>
+            <Route path='/docente' element={<Docente/>}></Route>
             <Route path='/docente/mis-reservas' element={<DocMisReservas/>}></Route>
             <Route path='/docente/mis-reservas/:id' element={<DocVisualizarDetalles/>}></Route>
             <Route path='/docente/solicitar-reserva' element={<SolResPr/>}></Route>

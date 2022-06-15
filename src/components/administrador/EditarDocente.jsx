@@ -8,6 +8,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import ModalConfirmacion from "../docente/ModalConfirmacion";
+import Swal from "sweetalert2";
 //import "./Login.css";
 
 function EditarDocente() {
@@ -30,24 +31,24 @@ function EditarDocente() {
     cargarDatos();
   }, []);
 
-  function cargarDatos(){
+  function cargarDatos() {
     setModalVisible(false)
     axios.get("/api/obtenerDocente/" + id).then(dato => {
       let docente = dato.data[0];
       console.log("he recuperado....................", docente);
-    setNombre(docente.Nombre_U);
-    setApellidoPaterno(docente.Apellido_Paterno_U);
-    setApellidoMaterno(docente.Apellido_Materno_U);
-    setCodigoSis(docente.Codigo_SIS_U);
-    setCorreoElectronico(docente.Correo_U);
-    setContrasenia(docente.Contrasenia_U);
-    setIdRol(docente.Rol_U);
-  })
+      setNombre(docente.Nombre_U);
+      setApellidoPaterno(docente.Apellido_Paterno_U);
+      setApellidoMaterno(docente.Apellido_Materno_U);
+      setCodigoSis(docente.Codigo_SIS_U);
+      setCorreoElectronico(docente.Correo_U);
+      setContrasenia(docente.Contrasenia_U);
+      setIdRol(docente.Rol_U);
+    })
   }
 
   const esContraseniaValida = useMemo(() => {
     return (
-      contrasenia.length == 0 ||contrasenia.length >= 8
+      contrasenia.length == 0 || contrasenia.length >= 8
     );
   }, [contrasenia]);
 
@@ -90,7 +91,7 @@ function EditarDocente() {
 
     if (
       !!contrasenia &&
-      esContraseniaValida&&
+      esContraseniaValida &&
       !!apellidoPaterno &&
       esApellidoPaternoValido &&
       !!apellidoMaterno &&
@@ -103,9 +104,32 @@ function EditarDocente() {
       esCodigoSisValido*/
     ) {
       console.log(datosDocente);
-      await axios.patch("/api/editarUsuario", datosDocente);
-      alert("La edicion de docente fue exitoso!");
-      navigate("/administrador/solicitudes");
+      
+      let error = false;
+      try {
+        await axios.patch("/api/editarUsuario", datosDocente);
+      }
+      catch (e) { error = true; }
+      if (error) {
+        Swal.fire(
+          'Error',
+          'Algo salió mal',
+          'error'
+        )
+      }
+      else {
+        if (idRol == 1) {
+          navigate("/administrador/docentes");
+        }
+        else {
+          navigate("/administrador/administradores");
+        }
+        Swal.fire(
+          'Éxito',
+          'Los cambios se realizaron correctamente',
+          'success'
+        )
+      }
     } else {
       alert(
         "Hay errores en uno o mas campos, y/o uno o mas campos estan vacios, por favor verificar"
@@ -147,11 +171,10 @@ function EditarDocente() {
 
   return (
     <div>
-    
+
       <Container>
         <Row>
           <Col md={12}>
-            <h1>Editar Datos de docente</h1>
           </Col>
         </Row>
         <Form onSubmit={(e) => enviarDatos(e)}>
@@ -205,7 +228,7 @@ function EditarDocente() {
                   value={contrasenia}
                   isInvalid={!esContraseniaValida}
                   onChange={(event) => setContrasenia(event.target.value)}
-                  type="password"
+                  type="text"
                 />
                 <Form.Control.Feedback type="invalid">
                   La contraseña debe contener mínimo de 8 caracteres
@@ -241,11 +264,11 @@ function EditarDocente() {
                   <option selected disabled value="">
                     Elegir Rol
                   </option>
-                
-                    {idRol===1?<option value="1" selected>Docente</option>: <option value="1">Docente</option>}
-                    {idRol===2?<option value="2" selected>Administrador</option>: <option value="2">Administrador</option>}
-                    {idRol===3?<option value="3" selected>Ambos</option>: <option value="3">Ambos</option>}
-                                    
+
+                  {idRol === 1 ? <option value="1" selected>Docente</option> : <option value="1">Docente</option>}
+                  {idRol === 2 ? <option value="2" selected>Administrador</option> : <option value="2">Administrador</option>}
+                  {idRol === 3 ? <option value="3" selected>Ambos</option> : <option value="3">Ambos</option>}
+
                 </select>
                 <div class="invalid-feedback">Seleccione un Rol</div>
               </div>
@@ -272,13 +295,13 @@ function EditarDocente() {
           </Col>
         </Form>
         <ModalConfirmacion
-                modalVisible={modalVisible}
-                texto="¿Desea guardar los cambios realizados?"
-                accionAceptar={editarDocente}
-                accionCancelar={() =>
-                  cargarDatos()
-                }
-              />
+          modalVisible={modalVisible}
+          texto="¿Está seguro de guardar los cambios?"
+          accionAceptar={editarDocente}
+          accionCancelar={() =>
+            cargarDatos()
+          }
+        />
       </Container>
     </div>
   );

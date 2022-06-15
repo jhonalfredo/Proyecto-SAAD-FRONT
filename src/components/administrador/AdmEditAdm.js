@@ -4,7 +4,7 @@ import MenuAdmin from './MenuAdmin'
 
 export default function AdmEditAdm() {
   return (
-    <div>Editar Administrador
+    <div>
         <MenuAdmin/>
         <EditarDocente/>
     </div>

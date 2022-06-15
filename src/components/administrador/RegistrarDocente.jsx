@@ -271,7 +271,7 @@ function RegistrarDocente() {
               className="botonRegistrarDocente"
               onClick={registrarDocente}
             >
-              Registrar docente
+              Registrar Usuario
             </Button>
           </Col>
         </Form>
