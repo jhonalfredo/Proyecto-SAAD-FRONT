@@ -3,8 +3,9 @@ import { Navigate, NavLink, useNavigate } from 'react-router-dom';
 import logo from './../../logo.svg';
 import axios from 'axios';
 import { useState } from 'react';
-import 'bootstrap/js/src/dropdown';
+//import 'bootstrap/js/src/dropdown';
 import imgnotif from './../../images/notificacion.png'
+import UList from '../UList';
 
 export default function MenuDoc() {
 
@@ -14,15 +15,20 @@ export default function MenuDoc() {
     //var notifNuevas = [{ id: 0, materia: "Introducción a la programación", fecha: "3/3/2020 10:24:24", estado: 0, admin: "Juan Jurado", mensaje: "Rechazado por falta de aulas" }, { id: 1, materia: "Elementos de programación", fecha: "2/3/2020 10:24:24", estado: 1, admin: "Santos Otoniel", mensaje: "aceptado sin problemas" }, { id: 2, materia: "Circuitos Electronicos", fecha: "10/5/2020 10:24:24", estado: 0, admin: "Juan Perez", mensaje: "aceptado" }];
     //var notifPasadas = ["hola", "fdadfas", "fdaksjfdal"];
 
-    const[notifNuevas, setNotifNuevas] = useState([]);
-    const[notifPasadas, setNotifPasadas] = useState([]);
+    const [notifNuevas, setNotifNuevas] = useState([]);
+    const [notifPasadas, setNotifPasadas] = useState([]);
+
+    const menuOpciones = [
+        { nombre: "Mis Reservas", direccion: "/docente/mis-reservas", funcion: -1 },
+        { nombre: "Solicitar", direccion: "/docente/solicitar-reserva", funcion: 1 },
+    ];
 
     useEffect(() => {
         const datosRecup = localStorage.getItem("datosUser");
         console.log("datoos user", datosRecup);
         if (datosRecup) {
             let nuevoDato = JSON.parse(datosRecup);
-            if (nuevoDato.rol !== 1 && nuevoDato.rol !== 3) {
+            if (!UList.esDocUser(nuevoDato.rol)) {
                 alert("Usted no es docente");
                 cerrarSesion();
             } else {
@@ -38,11 +44,11 @@ export default function MenuDoc() {
         //pedirUsuarios();
     }, []);
 
-    async function recuperarNotif(idDoc){
-        let nuevo = await axios.get("/api/notificacionesDocNuevas/"+idDoc);
+    async function recuperarNotif(idDoc) {
+        let nuevo = await axios.get("/api/notificacionesDocNuevas/" + idDoc);
         setNotifNuevas(nuevo.data);
         console.log(nuevo.data);
-        let leido = await axios.get("/api/notificacionesDocViejas/"+idDoc);
+        let leido = await axios.get("/api/notificacionesDocViejas/" + idDoc);
         setNotifPasadas(leido.data);
         console.log(leido.data);
     }
@@ -80,21 +86,9 @@ export default function MenuDoc() {
         return res;
     }
 
-    function getRolUsuario() {
-        let res = "------";
-        if (datosUser) {
-            if (datosUser.rol === 1) {
-                res = "Docente";
-            }else if(datosUser.rol===3){
-                res = "Docente/Administrador"
-            }
-        }
-        return res
-    }
-
-    async function clickIconoNotif(){
+    async function clickIconoNotif() {
         console.log("click logo notif")
-        let dato = {idDocente: datosUser.codigosis}
+        let dato = { idDocente: datosUser.codigosis }
         await axios.post("/api/verNotificaciones/", dato);
     }
 
@@ -116,12 +110,26 @@ export default function MenuDoc() {
 
                     <div className="collapse navbar-collapse" id="navbarText">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li className="nav-item">
-                                <NavLink to="/docente/mis-reservas" className="nav-link" aria-current="page">Mis Reservas</NavLink>
-                            </li>
-                            <li className="nav-item">
-                                <NavLink to="/docente/solicitar-reserva" className="nav-link">Solicitar</NavLink>
-                            </li>
+                            {datosUser ?
+                                menuOpciones.map(function (valor, indice) {
+                                    let res = null;
+
+                                    if (valor.funcion > 0) {
+                                        if (UList.esSuFuncion(valor.funcion, datosUser.rol)) {
+                                            res = <li key={indice} className="nav-item">
+                                                <NavLink to={valor.direccion} className="nav-link">{valor.nombre}</NavLink>
+                                            </li>
+                                        }
+                                    } else {
+                                        res = <li key={indice} className="nav-item">
+                                            <NavLink to={valor.direccion} className="nav-link">{valor.nombre}</NavLink>
+                                        </li>
+                                    }
+                                    return res;
+                                }
+                                )
+                                : ""
+                            }
                         </ul>
 
 
@@ -129,7 +137,7 @@ export default function MenuDoc() {
                         <div id="navbarNavDarkDropdown2">
                             <ul className="navbar-nav">
                                 <li className="nav-item dropdown">
-                                    <div onClick={()=>clickIconoNotif()} className="contenedornotif nav-link data-toggle" href="#" id="navbarDarkDropdownMenuLink2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <div onClick={() => clickIconoNotif()} className="contenedornotif nav-link data-toggle" href="#" id="navbarDarkDropdownMenuLink2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         <img className="imagenNotif" src={imgnotif} alt="notificacion" />
                                         <div class="topright" style={{ visibility: notifNuevas.length > 0 ? 'visible' : 'hidden' }}>{notifNuevas.length}</div>
 
@@ -172,7 +180,7 @@ export default function MenuDoc() {
 
                                     </div>
                                     <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDarkDropdownMenuLink">
-                                       {!!datosUser && datosUser.rol == 3 && <li><a className="dropdown-item" href="/administrador">Cambiar a Administrador</a></li>}
+                                        {!!datosUser && UList.esDocAdmin(datosUser.rol) && <li><a className="dropdown-item" href="/administrador">Cambiar a Administrador</a></li>}
                                         <li><a className="dropdown-item" href="#">{datosUser === null ? "..." : datosUser.codigosis}</a></li>
                                         <li><a className="dropdown-item" href="#" onClick={() => cerrarSesion()}>Cerrar Sesión</a></li>
                                     </ul>
@@ -197,15 +205,15 @@ function ListaNotif(props) {
                 <div key={e.id} onClick={() => navegar("/docente/mis-reservas/" + String(e.solicitud_reserva_Id_SR))}>
                     <div class="card p-2">
 
-<div className='text-muted' style={{fontSize:"10px"}}>{e.Fecha_Reporte_RR}</div>
+                        <div className='text-muted' style={{ fontSize: "10px" }}>{e.Fecha_Reporte_RR}</div>
                         <div style={{ display: 'flex', flexDirection: "row", alignItems: 'center' }}>
                             <div style={{ backgroundColor: e.Estado_RR == 1 ? "green" : "red", borderRadius: "50%", height: "10px", width: "10px", marginRight: "5px" }}></div>
                             <div className="fw-bold text-muted">{e.Nombre_M}</div>
                         </div>
                         <div>
-                            <div className='fw-light text-muted'>{e.Nombre_U+" "+e.Apellido_Paterno_U+" "+e.Apellido_Materno_U+":"}</div>
+                            <div className='fw-light text-muted'>{e.Nombre_U + " " + e.Apellido_Paterno_U + " " + e.Apellido_Materno_U + ":"}</div>
                             <div className='text-muted'>{e.Observacion_RR}</div>
-                            
+
                         </div>
 
                     </div>

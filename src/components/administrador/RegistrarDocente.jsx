@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import Image from "react-bootstrap/Image";
 import Form from "react-bootstrap/Form";
@@ -7,17 +7,38 @@ import MenuAdmin from "./MenuAdmin";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import UList from "../UList";
 //import "./Login.css";
 
 function RegistrarDocente() {
+  const idFuncion = 3;
+
   const [nombre, setNombre] = useState("");
   const [apellidoPaterno, setApellidoPaterno] = useState("");
   const [apellidoMaterno, setApellidoMaterno] = useState("");
   const [codigoSis, setCodigoSis] = useState("");
   const [correoElectronico, setCorreoElectronico] = useState("");
   const [contrasenia, setContrasenia] = useState("");
-  const [idRol, setIdRol] = useState(1);
   const navigate = useNavigate();
+  const [listaRoles, setListaRoles] = useState([]);
+  const [listaRolSel, setListaRolSel] = useState([]);
+
+
+
+  useEffect(() => {
+    if (UList.funcionVerificada(idFuncion)) {
+      cargarRoles(); 
+    }else{
+      Swal.fire({
+        position: 'top-center',
+        icon: 'error',
+        title: 'Acceso denegado',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      navigate("/administrador");
+    }
+  }, [])
 
   const esContraseniaValida = useMemo(() => {
     return (
@@ -54,6 +75,15 @@ function RegistrarDocente() {
     );
   }, [correoElectronico]);
 
+  
+  
+
+  function cargarRoles() {
+    axios.get("/api/obtenerRoles").then(dato => {
+      setListaRoles(dato.data);
+      console.log(dato.data);
+    })
+  }
 
   const registrarDocente = async (e) => {
     e.preventDefault();
@@ -64,7 +94,7 @@ function RegistrarDocente() {
       Codigo_SIS_U: codigoSis,
       Correo_U: correoElectronico,
       Contrasenia_U: contrasenia,
-      Rol_U: idRol,
+      roles: listaRolSel,
     };
 
     if (
@@ -80,7 +110,7 @@ function RegistrarDocente() {
       esCorreoElectronicoValido &&
       !!codigoSis &&
       esCodigoSisValido
-
+      &&listaRolSel.length>0
     ) {
       console.log(datosDocente);
       let error = false;
@@ -96,11 +126,11 @@ function RegistrarDocente() {
         )
       }
       else {
-        if (idRol == 1) {
+        if (!UList.esAdmin(listaRolSel)) {
           navigate("/administrador/docentes");
         }
         else {
-          navigate("/administrador/administradores");
+          navigate("/administrador/admisnistradores");
         }
         Swal.fire(
           'Éxito',
@@ -110,6 +140,9 @@ function RegistrarDocente() {
       }
 
     } else {
+      alert(
+        "Hay errores en uno o mas campos, y/o uno o mas campos estan vacios, por favor verificar"
+      );
     }
 
     // mandar el objeto datos docente al backend con axios.post('URL', datosDocente)
@@ -118,32 +151,18 @@ function RegistrarDocente() {
     setCodigoSis(event.target.value);
   }
 
-  function enviarDatos(e) {
-    e.preventDefault();
-    if (
-      !!nombre &&
-      esNombreValido &&
-      !!correoElectronico &&
-      esCorreoElectronicoValido &&
-      !!codigoSis &&
-      esCodigoSisValido
-    ) {
-      var dato = {
-        nombre: nombre,
-        apellidoP: apellidoPaterno,
-        apellidoM: apellidoMaterno,
-        codigo: codigoSis,
-        correo: correoElectronico,
-        cont: contrasenia,
-      };
-      console.log(dato);
+  function seleccionRol(idRol, seleccionado) {
+    if (seleccionado) {
+      let listaNueva = [...listaRolSel, idRol];
+      console.log("seleccionados", listaNueva);
+      setListaRolSel(listaNueva);
     } else {
-      alert(
-        "Hay errores en uno o mas campos, y/o uno o mas campos estan vacios, por favor verificar"
-      );
+      let listaNueva = listaRolSel.filter(dato => dato !== idRol);
+      console.log("seleccionados", listaNueva);
+      setListaRolSel(listaNueva);
     }
-  }
 
+  }
   return (
     <div>
       <MenuAdmin />
@@ -153,7 +172,7 @@ function RegistrarDocente() {
             <h1>Registrar Usuario</h1>
           </Col>
         </Row>
-        <Form onSubmit={(e) => enviarDatos(e)}>
+        <Form>
           <Row>
             <Col md={6}>
               <Form.Group>
@@ -231,23 +250,20 @@ function RegistrarDocente() {
               </Form.Group>
             </Col>
             <Col md={6}>
-              <div class="col-md-3">
-                <label for="validationCustom04" class="form-label">
-                  Rol
-                </label>
-                <select
-                  class="form-select"
-                  id="validationCustom04"
-                  onChange={(event) => setIdRol(event.target.value)}
-                  required
-                >
+              <p className="m-0">Roles</p>
 
-                  <option value="1">Docente</option>
-                  <option value="2">Administrador</option>
-                  <option value="3">Ambos</option>
-                </select>
-                <div class="invalid-feedback">Seleccione un Rol</div>
-              </div>
+                <div className='card p-1' style={{ minHeight: "50px" }}>
+                  <div className="form-check">
+                  {listaRoles.map((e, indice) =>
+                    <div key={e.Id_R} className = "p-1" >
+                      <input type="checkbox" className="form-check-input" id={e.Id_R} onChange = {(obj)=>{seleccionRol(e.Id_R, obj.target.checked)}}/>
+                      <label className="form-check-label" htmlFor={e.Id_R}>{e.Nombre_R}</label>
+                    </div>
+                  )}
+                  </div>
+                  
+                </div>
+              
             </Col>
           </Row>
           <Row>

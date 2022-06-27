@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import MenuAdmin from './MenuAdmin';
 
 export default function AdmSistema() {
@@ -34,7 +35,12 @@ export default function AdmSistema() {
   async function editarPerAc() {
     //console.log(inicioPer, finPer, semPer)
     if (inicioPerAc === finPerAc) {
-      alert("Seleccione una fecha distinta para el fin de periodo")
+      //alert("Seleccione una fecha distinta para el fin de periodo")
+      Swal.fire(
+        'Error',
+        'Seleccione una fecha distinta para el fin de periodo',
+        'error'
+      )
     } else if (inicioPerAc && finPerAc && semPerAc && idPerAc) {
       //registrar();
       await axios.patch("/api/editarPeriodoAcademico", {
@@ -45,14 +51,24 @@ export default function AdmSistema() {
       });
       navegar("/administrador/solicitudes")
     } else {
-      alert("Uno o más campos están vacíos");
+      //alert("Uno o más campos están vacíos");
+      Swal.fire(
+        'Error',
+        'Uno o más campos están vacíos',
+        'error'
+      )
     }
   }
 
   async function establecerPer() {
     console.log(inicioPer, finPer, semPer)
     if (inicioPer === finPer) {
-      alert("Seleccione una fecha distinta para el fin de periodo")
+      //alert("Seleccione una fecha distinta para el fin de periodo")
+      Swal.fire(
+        'Error',
+        'Seleccione una fecha distinta para el fin de periodo',
+        'error'
+      )
     } else if (inicioPer && finPer && semPer) {
       //registrar();
       await axios.post("/api/establecerPeriodoAcademico", {
@@ -62,7 +78,12 @@ export default function AdmSistema() {
       });
       navegar("/administrador/solicitudes")
     } else {
-      alert("Uno o más campos están vacíos");
+      //alert("Uno o más campos están vacíos");
+      Swal.fire(
+        'Error',
+        'Uno o más campos están vacíos',
+        'error'
+      )
     }
   }
   return (

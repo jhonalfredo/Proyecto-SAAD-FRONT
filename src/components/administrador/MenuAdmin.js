@@ -3,7 +3,8 @@ import { Link, Navigate, NavLink, useNavigate } from 'react-router-dom';
 import logo from './../../logo.svg';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import 'bootstrap/js/src/dropdown';
+//import 'bootstrap/js/src/dropdown';
+import UList from '../UList';
 //window.history.forward(1);
 
 
@@ -23,15 +24,21 @@ export default function MenuAdmin() {
 
     const [datosUser, setDatosUser] = useState(null);
     const navigate = useNavigate();
+    const menuOpciones = [
+        { nombre: "Solicitudes", direccion: "/administrador/solicitudes", funcion: 2},
+        { nombre: "Docentes", direccion: "/administrador/docentes", funcion: -1 },
+        { nombre: "Administradores", direccion: "/administrador/administradores", funcion: -1 }
+    ];
 
     useEffect(() => {
         const datosRecup = localStorage.getItem("datosUser");
         console.log(datosRecup);
         if (datosRecup) {
             let nuevoDato = JSON.parse(datosRecup);
-            if (nuevoDato.rol !== 2 && nuevoDato.rol !== 3) {
+            console.log(nuevoDato.rol);
+            if (!UList.esAdminUser(nuevoDato.rol)) {
                 alert("Usted no es administrador");
-                cerrarSesion();
+                //cerrarSesion();
             } else {
                 setDatosUser(nuevoDato);
             }
@@ -42,18 +49,6 @@ export default function MenuAdmin() {
         }
         //pedirUsuarios();
     }, []);
-
-    function getRolUsuario() {
-        let res = "------";
-        if (datosUser) {
-            if (datosUser.rol === 2) {
-                res = "Administrador";
-            }else if(datosUser.rol===3){
-                res = "Administrador/Docente"
-            }
-        }
-        return res
-    }
 
     const cerrarSesion = () => {
         console.log("cerrar sesion");
@@ -104,18 +99,27 @@ export default function MenuAdmin() {
 
                     <div className="collapse navbar-collapse" id="navbarText">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li className="nav-item">
-                                <NavLink to="/administrador/solicitudes" className="nav-link" aria-current="page">Solicitudes</NavLink>
-                            </li>
-                            <li className="nav-item">
-                                <NavLink to="/administrador/docentes" className="nav-link">Docentes</NavLink>
-                            </li>
-                            <li className="nav-item">
-                                <NavLink to="/administrador/administradores" className="nav-link">Administradores</NavLink>
-                            </li>
-                            <li className="nav-item">
-                                <NavLink to="/administrador/sistema" className="nav-link">Sistema</NavLink>
-                            </li>
+
+                            {datosUser ?
+                                menuOpciones.map(function (valor, indice) {
+                                    let res = null;
+
+                                    if (valor.funcion > 0) {
+                                        if (UList.esSuFuncion(valor.funcion, datosUser.rol)) {
+                                            res = <li key={indice} className="nav-item">
+                                                <NavLink to={valor.direccion} className="nav-link">{valor.nombre}</NavLink>
+                                            </li>
+                                        }
+                                    } else {
+                                        res = <li key={indice} className="nav-item">
+                                            <NavLink to={valor.direccion} className="nav-link">{valor.nombre}</NavLink>
+                                        </li>
+                                    }
+                                    return res;
+                                }
+                                )
+                                : ""
+                            }
 
                         </ul>
                         <span className="navbar-text">
@@ -133,7 +137,7 @@ export default function MenuAdmin() {
 
                                     </div>
                                     <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDarkDropdownMenuLink">
-                                        {!!datosUser && datosUser.rol == 3 && <li><a className="dropdown-item" href="/docente">Cambiar a Docente</a></li>}
+                                        {!!datosUser && UList.esDocAdmin(datosUser.rol) && <li><a className="dropdown-item" href="/docente">Cambiar a Docente</a></li>}
                                         <li><a className="dropdown-item" href="#">{datosUser === null ? "..." : datosUser.codigosis}</a></li>
                                         <li><a className="dropdown-item" href="#" onClick={() => cerrarSesion()}>Cerrar Sesión</a></li>
                                     </ul>

@@ -42,8 +42,9 @@ export default function ContenidoApp() {
             <Route path='/administrador/docentes' element={<AdmDocentes/>}></Route>
             <Route path='/administrador/docentes/:id' element={<AdmEditMatDocente/>}></Route>
             <Route path='/administrador/administradores' element={<AdmAdministradores/>}></Route>
-            <Route path='/administrador/sistema' element={<AdmSistema/>}></Route>
-            <Route path='/administrador/administradores/:id' element={<AdmEditAdm/>}></Route>
+            
+            <Route path='/administrador/editar/:id' element={<AdmEditAdm/>}></Route>
+            
             <Route path='/administrador/docentes/registrar' element={<RegistrarDocente/>}></Route>
             <Route path='/administrador/administradores/registrar' element={<RegistrarDocente/>}></Route>
 

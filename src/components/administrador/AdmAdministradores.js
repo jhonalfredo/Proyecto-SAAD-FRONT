@@ -61,7 +61,7 @@ export default function AdmAdministradores() {
               <td>{e.Nombre_U}</td>
               <td>{e.Codigo_SIS_U}</td>
               <td>{e.Correo_U}</td>
-              <td><Link to={String(e.Codigo_SIS_U)} className="btn btn-warning">Editar</Link></td>
+              <td><Link to={"/administrador/editar/"+String(e.Codigo_SIS_U)} className="btn btn-warning">Editar</Link></td>
             </tr>
           )}
         </tbody>

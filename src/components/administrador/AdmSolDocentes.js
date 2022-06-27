@@ -1,8 +1,10 @@
 import React from 'react'
 import MenuAdmin from './MenuAdmin'
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import UList from '../UList';
 //import 'bootstrap/js/dist/dom/selector-engine'
 //import 'bootstrap/js/dist/dom/event-handler'
 //import 'bootstrap/js/dist/dom/manipulator'
@@ -10,25 +12,35 @@ import axios from 'axios';
 //import 'bootstrap/js/src/tooltip'
 
 export default function AdmSolDocentes() {
+  const idFuncion = 2;
 
   //const [datos, setDatos] = useState([]);
   const [datosJuntados, setDatosJuntados] = useState([]);
   const [datosPen, setDatosPen] = useState([]);
   const [datosUr, setDatosUr] = useState([]);
   const [datosAt, setDatosAt] = useState([]);
+  const navegar = useNavigate();
 
   useEffect(() => {
-    console.log("se ejecuta efect")
-    recuperarSolicitades();
-    recuperarPendientes();
-    recuperarUrgentes();
-    recuperarAtendidas();
-    //recuperarPendientes();
+
+    if (UList.funcionVerificada(idFuncion)) {
+      recuperarSolicitades();
+      recuperarPendientes();
+      recuperarUrgentes();
+      recuperarAtendidas();
+    } else {
+      Swal.fire({
+        position: 'top-center',
+        icon: 'error',
+        title: 'Acceso denegado',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      navegar("/administrador");
+    }
   }, []);
 
-  //const recuperarPendientes()
-
-  const recuperarUrgentes = async () =>{
+  const recuperarUrgentes = async () => {
     const rutainicio = "/api/listarUrgencia";
     let v = await axios.get(rutainicio);
     let datos = v.data;
@@ -37,7 +49,7 @@ export default function AdmSolDocentes() {
     setDatosUr(datosJuntos);
   }
 
-  const recuperarAtendidas = async () =>{
+  const recuperarAtendidas = async () => {
     const rutainicio = "/api/listarAtendidas";
     let v = await axios.get(rutainicio);
     let datos = v.data;
@@ -46,7 +58,7 @@ export default function AdmSolDocentes() {
     setDatosAt(datosJuntos);
   }
 
-  const recuperarPendientes = async () =>{
+  const recuperarPendientes = async () => {
     const rutainicio = "/api/listarPendientes";
     let v = await axios.get(rutainicio);
     let datos = v.data;
@@ -162,7 +174,7 @@ export default function AdmSolDocentes() {
       </nav>
       <div className="tab-content" id="nav-tabContent">
         <div className="tab-pane fade show active p-3" id="nav-pendientes" role="tabpanel" aria-labelledby="nav-pendientes-tab">
-        <table className="table">
+          <table className="table">
             <thead>
               <tr>
                 <th scope="col">Fecha Recibida</th>
@@ -193,16 +205,16 @@ export default function AdmSolDocentes() {
           </table>
         </div>
         <div className="tab-pane fade p-3" id="nav-urgentes" role="tabpanel" aria-labelledby="nav-urgentes-tab">
-        <table className="table">
+          <table className="table">
             <thead>
               <tr>
-              <th scope="col">Fecha Reserva</th>
+                <th scope="col">Fecha Reserva</th>
                 <th scope="col">Hora</th>
                 <th className="col">ID</th>
-                
+
                 <th scope="col">Materia</th>
                 <th scope="col">Docente</th>
-                
+
                 <th scope="col">Fecha Recibida</th>
                 <th scope="col">Opciones</th>
               </tr>
@@ -213,11 +225,11 @@ export default function AdmSolDocentes() {
               </tr>
               {datosUr.map((e, indice) =>
                 <tr key={indice} value={e}>
-                  
+
                   <td>{e[0].Fecha_SR}</td>
                   <td>{e[0].Hora_Inicio_SR}</td>
 
-                  
+
                   <td>{e[0].Id_SR}</td>
                   <td>{e[0].Nombre_M}</td>
                   <td>{getNombresJuntados(e)}</td>
@@ -230,16 +242,16 @@ export default function AdmSolDocentes() {
         </div>
 
         <div className="tab-pane fade p-3" id="nav-atendidas" role="tabpanel" aria-labelledby="nav-atendidas-tab">
-        <table className="table">
+          <table className="table">
             <thead>
               <tr>
-              <th scope="col">Fecha Reserva</th>
+                <th scope="col">Fecha Reserva</th>
                 <th scope="col">Hora</th>
                 <th className="col">ID</th>
-                
+
                 <th scope="col">Materia</th>
                 <th scope="col">Docente</th>
-                
+
                 <th scope="col">Fecha Recibida</th>
                 <th scope="col">Opciones</th>
               </tr>
@@ -250,11 +262,11 @@ export default function AdmSolDocentes() {
               </tr>
               {datosAt.map((e, indice) =>
                 <tr key={indice} value={e}>
-                  
+
                   <td>{e[0].Fecha_SR}</td>
                   <td>{e[0].Hora_Inicio_SR}</td>
 
-  
+
                   <td>{e[0].Id_SR}</td>
                   <td>{e[0].Nombre_M}</td>
                   <td>{getNombresJuntados(e)}</td>
@@ -267,7 +279,7 @@ export default function AdmSolDocentes() {
         </div>
 
         <div className="tab-pane fade p-3" id="nav-todas" role="tabpanel" aria-labelledby="nav-todas-tab">
-        <table className="table">
+          <table className="table">
             <thead>
               <tr>
                 <th scope="col">Fecha Recibida</th>
@@ -292,7 +304,7 @@ export default function AdmSolDocentes() {
                   <td>{getNombresJuntados(e)}</td>
                   <td>{e[0].Fecha_SR}</td>
                   <td>{e[0].Hora_Inicio_SR}</td>
-                  <td style={{color: getEstadoReservaColor(e[0].Estado_Atendido_SR)}}>{getEstadoReserva(e[0].Estado_Atendido_SR)}</td>
+                  <td style={{ color: getEstadoReservaColor(e[0].Estado_Atendido_SR) }}>{getEstadoReserva(e[0].Estado_Atendido_SR)}</td>
                   <td><Link to={String(e[0].Id_SR)} className='btn btn-warning'>Detalle</Link></td>
                 </tr>
               )}

@@ -5,8 +5,11 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import EditarDocente from './EditarDocente';
+import UList from '../UList';
 
 export default function AdmEditMatDocente(props) {
+
+  const idFuncion = 5;
 
   const { id } = useParams();
   const datos = props;
@@ -21,11 +24,23 @@ export default function AdmEditMatDocente(props) {
   const [gruposLibres, setGruposLibres] = useState([]);
   const [misLibresSel, setMisLibresSel] = useState([]);
 
+  const navegar = useNavigate();
   useEffect(() => {
-    console.log("se ejecuta efect")
-    recuperarDatoUser();
-    recuperarMateriasDocente();
-    recuperarMateriasLibres();
+
+    if (UList.funcionVerificada(idFuncion)) {
+      recuperarDatoUser();
+      recuperarMateriasDocente();
+      recuperarMateriasLibres();
+    } else {
+      Swal.fire({
+        position: 'top-center',
+        icon: 'error',
+        title: 'Acceso denegado',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      navegar("/administrador");
+    }
   }, []);
 
   const recuperarDatoUser = async () => {
@@ -235,16 +250,12 @@ export default function AdmEditMatDocente(props) {
       </div>
       <nav>
         <div className="nav nav-tabs bg-dark" id="nav-tab" role="tablist">
-          <button className="nav-link active" id="nav-editardoc-tab" data-bs-toggle="tab" data-bs-target="#nav-editardoc" type="button" role="tab" aria-controls="nav-editardoc" aria-selected="true">Editar Usuario</button>
-          <button className="nav-link" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Añadir Materias</button>
+            <button className="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Añadir Materias</button>
           <button className="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Eliminar Materias</button>
         </div>
       </nav>
       <div className="tab-content" id="nav-tabContent">
-        <div className="tab-pane fade show active p-3" id="nav-editardoc" role="tabpanel" aria-labelledby="nav-editardoc-tab">
-          <EditarDocente iddoc = {id} />
-        </div>
-        <div className="tab-pane fade p-3" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        <div className="tab-pane fade show active p-3" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
           <div className="d-flex align-items-center" style={{ visibility: agregandoMat ? 'visible' : 'hidden' }}>
             <strong>Agregando...</strong>
             <div className="spinner-border ms-auto" role="status" aria-hidden="true"></div>

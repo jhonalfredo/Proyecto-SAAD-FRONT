@@ -2,21 +2,40 @@ import axios from 'axios';
 import { Button } from 'bootstrap';
 import React, { useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import MenuDoc from '../docente/MenuDoc';
 import DetalleAtendido from '../reusables/DetalleAtendido';
 import DetalleSimple from '../reusables/DetalleSimple';
 import FormAcepRecSolDoc from '../reusables/FormAcepRecSolDoc';
+import UList from '../UList';
 import MenuAdmin from './MenuAdmin';
 
 export default function AdmAceptarSolicitudesDoc() {
+  const idFuncion = 2;
 
   const { id } = useParams();
   const [datosRes, setDatosRes] = useState(null);
   const [datosAtendido, setDatosAtendido] = useState(null);
 
+  const navegar =  useNavigate();
+
   useEffect(() => {
-    recuperarDatosReserva();
+
+    if (UList.funcionVerificada(idFuncion)) {
+      recuperarDatosReserva();
+    }else{
+      Swal.fire({
+        position: 'top-center',
+        icon: 'error',
+        title: 'Acceso denegado',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      navegar("/administrador");
+    }
+
+    
     //recuperarListas();
     //recuperarDatos();
   }, []);

@@ -8,8 +8,11 @@ import Form from "react-bootstrap/Form";
 import { parse, isFuture, isToday } from 'date-fns'
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import UList from "../UList";
 
 export default function SolResPr() {
+
+  const idFuncion = 1;
 
   const navigate = useNavigate();
 
@@ -34,27 +37,33 @@ export default function SolResPr() {
   const [misGruposSel, setMisGruposSel] = useState([]);
   const [gruposAdjuntos, setGruposAdjuntos] = useState([]);
   const [misAdjuntosSel, setMisAdjuntosSel] = useState([]);
-  
+
   //horario
   var horariofin = "7:30";
   const [iniPer, setIniPer] = useState(null);
   const [finPer, setFinPer] = useState(null)
 
   useEffect(() => {
-    console.log("se ejecuta efect");
-    const datosRecup = localStorage.getItem("datosUser");
-    console.log(datosRecup);
-    if (datosRecup) {
-      let nuevoDato = JSON.parse(datosRecup);
-      //console.log(nuevoDato);
-      setDatosUser(nuevoDato);
-      recuperarMateriaDoc(nuevoDato.codigosis);
-      recupPeriodo();
-      
+    if (UList.funcionVerificada(idFuncion)) {
+      let user = UList.recupUserLocal();
+      if (user) {
+        setDatosUser(user);
+        recuperarMateriaDoc(user.codigosis);
+        recupPeriodo();
+      }
+    }else{
+      Swal.fire({
+        position: 'top-center',
+        icon: 'error',
+        title: 'Acceso denegado',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      navigate("/docente");
     }
   }, []);
 
-  const recupPeriodo = async()=>{
+  const recupPeriodo = async () => {
     let periodo = await (await axios.get("/api/obtenerPeriodoAcademico")).data;
     //console.log(periodo.data)
     setIniPer(periodo.Fecha_Inicio_PA)
@@ -182,7 +191,7 @@ export default function SolResPr() {
         Fecha_SR: fechaR,
         Hora_Inicio_SR: horarioR,
         Cantidad_Periodos_SR: Number(perR),
-        Numero_Estudiantes_SR: numEst,
+        Numero_Estudiantes_SR: Number(numEst),
         Estado_Atendido_SR: 0,
         Motivo_SR: motivoR,
         Hora_Final_SR: horariofin
@@ -215,7 +224,7 @@ export default function SolResPr() {
 
   }
 
-  function redireccionarReserva(){
+  function redireccionarReserva() {
     navigate("/docente/mis-reservas")
   }
 
@@ -224,23 +233,23 @@ export default function SolResPr() {
     try {
       const ruta = "/api/reservaCompartida";
       await axios.post(ruta, valor);
-    }catch (e) {
+    } catch (e) {
       error = true;
     }
 
-    if(error){
+    if (error) {
       Swal.fire(
         'Error',
         'Algo salió mal',
         'error'
       )
-    }else{
+    } else {
       Swal.fire(
         'Éxito',
         'Se envió la solicitud correctamente',
         'success'
       )
-      
+
       navigate("/docente/mis-reservas")
 
     }
@@ -298,21 +307,21 @@ export default function SolResPr() {
         //generarHorario(horarioR, 1)
       }
       //generarHorario(horarioR, perR)
-    }else if (indice === horarios.length - 3) {
+    } else if (indice === horarios.length - 3) {
       setListaPeriodos([1, 2, 3]);
       if (Number(perR) === 3) {
         setPerR(1);
         //generarHorario(horarioR, 1)
       }
       //generarHorario(horarioR, perR)
-    }else if (indice === horarios.length - 4) {
+    } else if (indice === horarios.length - 4) {
       setListaPeriodos([1, 2, 3, 4]);
       if (Number(perR) === 3) {
         setPerR(1);
         //generarHorario(horarioR, 1)
       }
       //generarHorario(horarioR, perR)
-    }else if (indice === horarios.length - 5) {
+    } else if (indice === horarios.length - 5) {
       setListaPeriodos([1, 2, 3, 4, 5]);
       if (Number(perR) === 3) {
         setPerR(1);
@@ -535,7 +544,7 @@ export default function SolResPr() {
                               " " +
                               e.Apellido_Paterno_U +
                               " " +
-                              e.Apellido_Materno_U }
+                              e.Apellido_Materno_U}
                           </label>
                         </div>
                       </div>
@@ -553,7 +562,7 @@ export default function SolResPr() {
           <div id="emailHelp" class="form-text">{motivoR.length} caracteres</div>
         </div>
 
-        <button type="button" className="btn btn-danger" onClick={()=>redireccionarReserva()}>
+        <button type="button" className="btn btn-danger" onClick={() => redireccionarReserva()}>
           Cancelar
         </button>
         <button type="submit" className="btn btn-primary">

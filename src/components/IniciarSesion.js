@@ -4,6 +4,7 @@ import logo from './../logo.svg';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Alert } from 'bootstrap';
+import UList from './UList';
 const rutainicio = "http://127.0.0.1:8000/api/acceso";
 //const rutainicio = "http://localhost:8000/api/acceso/"
 const ruta = "http://127.0.0.1:8000/api/users";
@@ -52,8 +53,10 @@ export default function IniciarSesion(props) {
                         localStorage.setItem('auth_name', res.data.correo);
                         console.log("se logeo correctamente");
                         console.log(res.data);
+                        console.log(UList.juntarComunes("Rol_Id_R", res.data.rol));
+                        let roles = UList.juntarComunes("Rol_Id_R", res.data.rol);
                         localStorage.setItem("datosUser", JSON.stringify(res.data));
-                        if(res.data.rol===2||res.data.rol===3){
+                        if(UList.buscarAtrib("Rol_Id_R", 2, roles)){
                             navigate("administrador");
                         }else if(res.data.rol===1){
                             navigate("docente")
