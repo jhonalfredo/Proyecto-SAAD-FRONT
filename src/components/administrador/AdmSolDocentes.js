@@ -5,16 +5,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import UList from '../UList';
-//import 'bootstrap/js/dist/dom/selector-engine'
-//import 'bootstrap/js/dist/dom/event-handler'
-//import 'bootstrap/js/dist/dom/manipulator'
-//import 'bootstrap/js/dist/dom/data'
-//import 'bootstrap/js/src/tooltip'
 
 export default function AdmSolDocentes() {
   const idFuncion = 2;
-
-  //const [datos, setDatos] = useState([]);
   const [datosJuntados, setDatosJuntados] = useState([]);
   const [datosPen, setDatosPen] = useState([]);
   const [datosUr, setDatosUr] = useState([]);
@@ -22,7 +15,6 @@ export default function AdmSolDocentes() {
   const navegar = useNavigate();
 
   useEffect(() => {
-
     if (UList.funcionVerificada(idFuncion)) {
       recuperarSolicitades();
       recuperarPendientes();

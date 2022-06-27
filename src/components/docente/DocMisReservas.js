@@ -1,8 +1,5 @@
 import React from 'react'
 import MenuDoc from './MenuDoc'
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import DetallesReserva from '../administrador/DetallesReserva';
 import Pendientes from './Pendientes';
 import Rechazadas from './Rechazadas';
 import Aceptadas from './Aceptadas';

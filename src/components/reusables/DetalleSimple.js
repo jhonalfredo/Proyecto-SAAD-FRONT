@@ -29,6 +29,15 @@ export default function DetalleSimple(props) {
                 </div>
               </div>
             </div>
+            <div class="col">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Fecha</h5>
+                  <p class="card-text" >
+                  {props.datos.detalle[0].Fecha_SR}</p>                 
+                </div>
+              </div>
+            </div>
           </div>
           <div class="row pb-3">
             <div class="col">
@@ -55,22 +64,11 @@ export default function DetalleSimple(props) {
                 </div>
               </div>
             </div>
-          </div>
-          <div class="row pb-3">
             <div class="col">
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Nro Estudiantes</h5>
                   <p class="card-text"> {props.datos.detalle[0].Numero_Estudiantes_SR}</p>
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">Fecha</h5>
-                  <p class="card-text" >
-                  {props.datos.detalle[0].Fecha_SR}</p>                 
                 </div>
               </div>
             </div>

@@ -3,7 +3,7 @@ import { Navigate, NavLink, useNavigate } from 'react-router-dom';
 import logo from './../../logo.svg';
 import axios from 'axios';
 import { useState } from 'react';
-//import 'bootstrap/js/src/dropdown';
+import 'bootstrap/js/src/dropdown';
 import imgnotif from './../../images/notificacion.png'
 import UList from '../UList';
 

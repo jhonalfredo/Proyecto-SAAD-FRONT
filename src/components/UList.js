@@ -36,7 +36,6 @@ export default class UList {
         let user = UList.recupUserLocal();
         let enabled = false;
         if(user){
-            console.log("ususariorooooool", user.rol)
             user.rol.forEach(element => {
                 if(element.Id_F===id){
                     enabled = true;

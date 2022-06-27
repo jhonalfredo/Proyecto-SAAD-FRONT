@@ -1,8 +1,5 @@
-import logo from './logo.svg';
 import './App.css';
-import Menu from './components/Menu';
-import MenuSimple from './components/MenuSimple';
-import IniciarSesion from './components/IniciarSesion';
+
 import ContenidoApp from './components/ContenidoApp';
 import axios from 'axios';
 

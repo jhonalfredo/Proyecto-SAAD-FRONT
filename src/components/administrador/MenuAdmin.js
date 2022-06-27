@@ -3,7 +3,7 @@ import { Link, Navigate, NavLink, useNavigate } from 'react-router-dom';
 import logo from './../../logo.svg';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-//import 'bootstrap/js/src/dropdown';
+import 'bootstrap/js/src/dropdown';
 import UList from '../UList';
 //window.history.forward(1);
 

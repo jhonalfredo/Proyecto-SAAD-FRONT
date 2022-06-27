@@ -1,5 +1,4 @@
 import React from 'react'
-import MenuDoc from './MenuDoc'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -82,7 +81,7 @@ export default function Aceptadas() {
   }
   
   const cancelarAceptadaBD = async (e) =>{
-    const ruta = "/api/cancelarAceptada/" + e.Id_SR;
+    const ruta = "/api/cancelarAceptada/" + e.Id_RR;
     console.log(ruta);
     await axios.patch(ruta);
     recuperarMisSolAceptadas();

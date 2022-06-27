@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import MenuSimple from './MenuSimple'
 import logo from './../logo.svg';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Alert } from 'bootstrap';
 import UList from './UList';
-const rutainicio = "http://127.0.0.1:8000/api/acceso";
-//const rutainicio = "http://localhost:8000/api/acceso/"
-const ruta = "http://127.0.0.1:8000/api/users";
+
 export default function IniciarSesion(props) {
 
     const [usuario, setUsuario] = useState(0);

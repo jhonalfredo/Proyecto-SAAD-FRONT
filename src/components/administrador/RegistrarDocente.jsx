@@ -87,15 +87,7 @@ function RegistrarDocente() {
 
   const registrarDocente = async (e) => {
     e.preventDefault();
-    const datosDocente = {
-      Nombre_U: nombre,
-      Apellido_Paterno_U: apellidoPaterno,
-      Apellido_Materno_U: apellidoMaterno,
-      Codigo_SIS_U: codigoSis,
-      Correo_U: correoElectronico,
-      Contrasenia_U: contrasenia,
-      roles: listaRolSel,
-    };
+    
 
     if (
       !!contrasenia &&
@@ -112,6 +104,15 @@ function RegistrarDocente() {
       esCodigoSisValido
       &&listaRolSel.length>0
     ) {
+      const datosDocente = {
+        Nombre_U: nombre.toUpperCase(),
+        Apellido_Paterno_U: apellidoPaterno.toUpperCase(),
+        Apellido_Materno_U: apellidoMaterno.toUpperCase(),
+        Codigo_SIS_U: codigoSis,
+        Correo_U: correoElectronico,
+        Contrasenia_U: contrasenia,
+        roles: listaRolSel,
+      };
       console.log(datosDocente);
       let error = false;
       try {
@@ -130,7 +131,7 @@ function RegistrarDocente() {
           navigate("/administrador/docentes");
         }
         else {
-          navigate("/administrador/admisnistradores");
+          navigate("/administrador/administradores");
         }
         Swal.fire(
           'Éxito',
@@ -140,9 +141,13 @@ function RegistrarDocente() {
       }
 
     } else {
-      alert(
-        "Hay errores en uno o mas campos, y/o uno o mas campos estan vacios, por favor verificar"
-      );
+      Swal.fire({
+        position: 'top-center',
+        icon: 'error',
+        title: 'Hay errores en uno o mas campos, y/o uno o mas campos estan vacios, por favor verificar',
+        showConfirmButton: false,
+        timer: 1500
+      })
     }
 
     // mandar el objeto datos docente al backend con axios.post('URL', datosDocente)
