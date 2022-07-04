@@ -102,9 +102,16 @@ export default function AdmSolDocentes() {
   const getNombresJuntados = (datos) => {
     //console.log("uniendo nombres", datos);
     let res = "";
+    let ultnomb = "";
 
+    //let ultcomb = "fdskjfdas";
     datos.forEach(e => {
-      res = res + e.Nombre_U + " " + e.Apellido_Paterno_U + " " + e.Apellido_Materno_U + ", ";
+      let aux = e.Nombre_U + " " + e.Apellido_Paterno_U + " " + e.Apellido_Materno_U + ", ";
+      console.log("verif", aux, ultnomb);
+      if(aux!==ultnomb){
+        res = res + aux;
+        ultnomb = aux;
+      }
     });
 
     /*for(let i=0;i<e.length;i++){

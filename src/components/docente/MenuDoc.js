@@ -89,7 +89,7 @@ export default function MenuDoc() {
     async function clickIconoNotif() {
         console.log("click logo notif")
         let dato = { idDocente: datosUser.codigosis }
-        await axios.post("/api/verNotificaciones/", dato);
+        await axios.patch("/api/verNotificaciones/", dato);
     }
 
     return (

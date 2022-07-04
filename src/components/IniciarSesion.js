@@ -54,7 +54,7 @@ export default function IniciarSesion(props) {
                         localStorage.setItem("datosUser", JSON.stringify(res.data));
                         if(UList.buscarAtrib("Rol_Id_R", 2, roles)){
                             navigate("administrador");
-                        }else if(res.data.rol===1){
+                        }else if(UList.buscarAtrib("Rol_Id_R", 1, roles)){
                             navigate("docente")
                         }
                         //navigate("/administrador/solicitudes");
