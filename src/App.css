@@ -126,3 +126,16 @@
 .codSisUser{
     font-size: 14px;
 }
+
+/*reemplazo bootstrap*/
+.nav-link-hover-color{}
+
+.nav-tabs .nav-item.show .nav-link {
+
+    color: #FFFFFF;
+
+    background-color: #23fb59;
+
+    border-color: #dee2e6 #dee2e6 #fff;
+
+}

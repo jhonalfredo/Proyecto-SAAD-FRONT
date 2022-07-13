@@ -8,7 +8,7 @@ import DatosApp from '../docente/DatosApp';
 
 export default function FormAcepRecSolDoc(props) {
     const [aulasSel, setAulasSel] = useState([]);
-    const [observacionR, setObservacionR] = useState("");
+    const [observacionR, setObservacionR] = useState("Ninguna");
     const [totalSumAulas, setTotalSumAulas] = useState(0);
     const [errorObs, setErrorObs] = useState("");
     const navegar = useNavigate();
@@ -128,7 +128,7 @@ export default function FormAcepRecSolDoc(props) {
                     {props.datos ? <SugerenciaAulas totalReq = {props.datos.detalle[0].Numero_Estudiantes_SR} datos={props.datos} setAulasSel={setAulasSel} setTotalSumAulas={setTotalSumAulas} /> : "cargando sugenrencias"}
                     <div className=''>
                         <label for="validationCustom03" class="form-label">Observación</label>
-                        <textarea type="text" class="form-control" id="validationCustom03" required maxLength={500} onChange={(e) => setObservacionR(e.target.value)} />
+                        <textarea type="text" class="form-control" id="validationCustom03" required maxLength={500} value = {observacionR} onChange={(e) => setObservacionR(e.target.value)} />
                         <div className='pb-3' style={{ display: 'flex', justifyContent: 'left' }}>
                             <div id="emailHelp" class="form-text">{observacionR.length} caracteres</div>
                             <div className='px-3 form-text' style={{ color: "red" }}>

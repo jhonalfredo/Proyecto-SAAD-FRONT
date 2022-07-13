@@ -211,8 +211,8 @@ function ListaNotif(props) {
                             <div className="fw-bold text-muted">{e.Nombre_M}</div>
                         </div>
                         <div>
-                            <div className='fw-light text-muted'>{e.Nombre_U + " " + e.Apellido_Paterno_U + " " + e.Apellido_Materno_U + ":"}</div>
-                            <div className='text-muted'>{e.Observacion_RR}</div>
+                            <div className='fw-light text-muted'>{"Atendido por: "+e.Nombre_U + " " + e.Apellido_Paterno_U + " " + e.Apellido_Materno_U + ""}</div>
+                            
 
                         </div>
 
@@ -223,7 +223,7 @@ function ListaNotif(props) {
     )
 }
 
-
+//<div className='text-muted'>{e.Observacion_RR}</div>
 /*<div class="contenedornotif">
                             <img className="imagenNotif" src={imgnotif} alt="notificacion" />
                             <div class="topright" style={{ visibility: notifNuevas.length > 0 ? 'visible' : 'hidden' }}>{notifNuevas.length}</div>
